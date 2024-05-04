@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/PrimaryColor"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:textColor="#f4f5ee"
+        android:text="@string/app_name"
+        android:layout_gravity="center"
+        android:paddingBottom="40dp"
+        android:paddingTop="20dp"/>
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/user_name_text"
+        android:id="@+id/etUserName"
+        android:background="@color/SecondaryColor"
+        android:textColorHint="#505563"
+        android:textColor="#505563"
+        android:inputType="text"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
+        android:padding="4dp"/>
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/password_text"
+        android:id="@+id/etPassword"
+        android:inputType="textPassword"
+        android:textColorHint="#505563"
+        android:textColor="#505563"
+        android:background="@color/SecondaryColor"
+        android:layout_gravity="center"
+        android:padding="4dp"/>
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:backgroundTint="#e7e9e7"
+        android:text="@string/login_text"
+        android:id="@+id/btnLogIn"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:textColor="#505563"
+        android:layout_marginTop="40dp"/>
+
+    <Button
+        android:layout_height="wrap_content"
+        android:layout_width="700dp"
+        android:backgroundTint="@color/PrimaryColor"
+        android:text="@string/sign_up_text"
+        android:id="@+id/btnSignUp"
+        android:textSize="17sp"
+        android:layout_gravity="center"
+        android:textColor="#f4f5ee"/>
+
+</LinearLayout>
+
+
