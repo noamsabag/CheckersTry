@@ -52,20 +52,7 @@ class RoomsActivity : AppCompatActivity() {
 
 
         btnJoinRoom.setOnClickListener{
-            UserData.userId = "2" // Important: Fix id
-            val dbRef = Firebase.database.getReference("games")
-            gameId = etRoomNumber.text.toString()
-            dbRef.child(gameId).get().addOnCompleteListener {
-                if (it.isSuccessful)
-                {
-                    RoomAdapter.addPlayerToRoom(gameId, UserData.userId)
-                    startGame()
-                }
-                else
-                {
-                    Toast.makeText(this, "Room Doesn't Exists", Toast.LENGTH_SHORT).show()
-                }
-            }
+            joinRoom()
         }
 
 
@@ -112,6 +99,32 @@ class RoomsActivity : AppCompatActivity() {
         }
     }
 
+
+
+    fun joinRoom()
+    {
+        UserData.userId = "2" // Important: Fix id
+        val dbRef = Firebase.database.getReference("games")
+        gameId = etRoomNumber.text.toString()
+        val e = 1
+        dbRef.child(gameId).get().addOnCompleteListener {
+            try {
+                if (it.isSuccessful)
+                {
+                    RoomAdapter.addPlayerToRoom(gameId, UserData.userId)
+                    startGame()
+                }
+                else
+                {
+                    Toast.makeText(this, "Room Doesn't Exists", Toast.LENGTH_SHORT).show()
+                }
+            }
+            catch (e: Exception)
+            {
+                val m = e.message
+            }
+        }
+    }
     fun startGame()
     {
         try {

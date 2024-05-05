@@ -76,4 +76,14 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
+    <string name="title_activity_analysis">AnalysisActivity</string>
+    <string name="backward_button">Backward Button</string>
+    <string name="forward_button">ForwardButton</string>
+    <string name="game_analysis">Game Analysis</string>
+    <string name="title_activity_game_history">GameHistoryActivity</string>
+    <string name="play_online">Play Online</string>
+    <string name="play_offline">Play Offline</string>
+    <string name="your_profile">Your Profile</string>
+    <string name="logout">Logout</string>
+    <string name="profile">Profile</string>
 </resources>

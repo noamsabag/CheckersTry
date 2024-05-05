@@ -15,6 +15,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
+import com.example.checkerstry.classes.GameData
 import com.example.checkerstry.classes.OnlineGameData
 import com.example.checkerstry.classes.Piece
 import com.example.checkerstry.classes.Player
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     lateinit var passAndPlay: CardView
     lateinit var onlineGame: CardView
+    lateinit var gameAnalysis: CardView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,8 +51,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
+
         passAndPlay = findViewById(R.id.passAndPlay)
         onlineGame = findViewById(R.id.onlineGame)
+        gameAnalysis = findViewById(R.id.analysys)
         passAndPlay.setOnClickListener {
             val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
@@ -59,6 +65,17 @@ class MainActivity : AppCompatActivity() {
 
             val intent = Intent(this, RoomsActivity::class.java)
             startActivity(intent)
+        }
+        gameAnalysis.setOnClickListener{
+            GameData.setGameId("-Nx7FuNpkOU1tbBwYe7x")
+            val intent = Intent(this, GameHistoryActivity::class.java)
+            try {
+                startActivity(intent)
+            }
+            catch (e: Exception)
+            {
+                val r = e.message
+            }
         }
     }
 

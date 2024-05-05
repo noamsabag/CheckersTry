@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import com.example.checkerstry.classes.FirebaseAuthHelper
+import com.example.checkerstry.classes.FirebaseUsersHelper
 import com.example.checkerstry.classes.GameState
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -29,6 +30,8 @@ class LoginPage : AppCompatActivity(), View.OnClickListener
         dbRef.child("players").setValue(0)
         dbRef.child("playersNum").setValue(0)
 
+        FirebaseUsersHelper.initUser("1")
+        FirebaseUsersHelper.initUser("2")
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_page)
@@ -48,9 +51,6 @@ class LoginPage : AppCompatActivity(), View.OnClickListener
 
     override fun onClick(v: View?)
     {
-
-
-
         if (v?.id == R.id.btnSignUp)
         {
             val intent = Intent(this, SignUpPage::class.java)
@@ -58,9 +58,11 @@ class LoginPage : AppCompatActivity(), View.OnClickListener
         }
         else if (v?.id == R.id.btnLogIn)
         {
+
             FirebaseAuthHelper.singIn(etUserName.text.toString(), etPassword.text.toString()).addOnCompleteListener {
                 if (it.isSuccessful)
                 {
+                    FirebaseUsersHelper.loadUser(it.result.user!!.uid)
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }

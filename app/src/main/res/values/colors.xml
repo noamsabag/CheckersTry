@@ -2,7 +2,10 @@
 <resources>
     <color name="purple_200">#FFBB86FC</color>
     <color name="PrimaryColor">#424241</color>
-    <color name="SecondaryColor">#fcfffe</color>
+    <color name="gameBackground">#272421</color>
+    <color name="playerDataBackground">#322e2b</color>
+    <color name="timerBackgroundColor">#575353</color>
+    <color name="SecondaryColor">#2A393E</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>

@@ -8,15 +8,10 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.checkerstry.classes.FirebaseAuthHelper
-import com.example.checkerstry.ui.theme.CheckersTryTheme
+import com.example.checkerstry.classes.FirebaseUsersHelper
 import com.google.firebase.auth.AuthResult
 
 class SignUpPage : ComponentActivity(), View.OnClickListener
@@ -41,6 +36,7 @@ class SignUpPage : ComponentActivity(), View.OnClickListener
         FirebaseAuthHelper.createUser(etUserName.text.toString(), etPassword.text.toString()).addOnCompleteListener {
             if (it.isSuccessful)
             {
+                FirebaseUsersHelper.initUser(it.result.user!!.uid)
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
             } else
