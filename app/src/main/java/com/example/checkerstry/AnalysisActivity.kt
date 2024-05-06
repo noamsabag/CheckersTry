@@ -29,6 +29,7 @@ class AnalysisActivity : AppCompatActivity() {
         binding = ActivityAnalysisBinding.inflate(layoutInflater)
         setContentView(binding.root)
         gameId = intent.getStringExtra("GAME_ID")!!
+        GameData.setGameId(gameId)
         val viewModel = ViewModelProvider(this).get(AnalysisActivityViewModel::class.java)
         val game = viewModel.game
 

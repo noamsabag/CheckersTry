@@ -86,4 +86,15 @@
     <string name="your_profile">Your Profile</string>
     <string name="logout">Logout</string>
     <string name="profile">Profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="join_create_room">Join/Create Room</string>
+    <string name="quick_match">Quick Match</string>
+    <string name="small_checkers_explenation">Small Checkers: played on a 4x4 board instead of an 8x8 board.</string>
+    <string name="big_checkers_explenation">Big Checkers: played on a 8x8 board instead of an 8x8 board.</string>
+    <string name="play_against_cpu">Play Against CPU</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="regular_game">Regular Game</string>
+    <string name="analyze_past_games">Analyze Past Games</string>
 </resources>

@@ -9,28 +9,29 @@
             android:icon="@drawable/home_icon"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/nav_play_online"
             android:icon="@drawable/play_online"
             android:title="@string/play_online" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_play_offline"
             android:icon="@drawable/play_offline"
             android:title="@string/play_offline" />
-    </group>
+
 
     <item android:title="@string/profile">
         <menu>
 
             <item
-                android:id="@+id/profile_page"
+                android:id="@+id/nav_profile_page"
                 android:icon="@drawable/profile_page_icon"
                 android:title="@string/your_profile"/>
 
             <item
-                android:id="@+id/logout"
+                android:id="@+id/nav_logout"
                 android:icon="@drawable/logout_icon"
                 android:title="@string/logout"/>
         </menu>
     </item>
 
+    </group>
 </menu>

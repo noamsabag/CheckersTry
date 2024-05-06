@@ -12,7 +12,10 @@ import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import com.example.checkerstry.classes.FirebaseAuthHelper
 import com.example.checkerstry.classes.FirebaseUsersHelper
+import com.example.checkerstry.classes.GAMES_PATH
 import com.example.checkerstry.classes.GameState
+import com.example.checkerstry.classes.USERS_PATH
+import com.example.checkerstry.classes.UserData
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -25,14 +28,16 @@ class LoginPage : AppCompatActivity(), View.OnClickListener
     override fun onCreate(savedInstanceState: Bundle?)
     {
 
-        val dbRef = Firebase.database.getReference("games/123")
-        dbRef.child("state").setValue(GameState.WaitingForPlayers)
-        dbRef.child("players").setValue(0)
-        dbRef.child("playersNum").setValue(0)
+        val dbRef = Firebase.database.getReference(USERS_PATH)
 
-        FirebaseUsersHelper.initUser("1")
-        FirebaseUsersHelper.initUser("2")
+        dbRef.child("1").child(GAMES_PATH).child("-Nx6TRibEnwCZPcHORub").setValue(1)
+        dbRef.child("1").child(GAMES_PATH).child("-Nx7FuNpkOU1tbBwYe7x").setValue(1)
 
+        dbRef.child("2").child(GAMES_PATH).child("-Nx6TRibEnwCZPcHORub").setValue(0)
+        dbRef.child("2").child(GAMES_PATH).child("-Nx7FuNpkOU1tbBwYe7x").setValue(0)
+
+        FirebaseUsersHelper.loadUser("1")
+        FirebaseUsersHelper.loadGameHistory()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_page)
 
@@ -74,5 +79,9 @@ class LoginPage : AppCompatActivity(), View.OnClickListener
                 }
             }
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
     }
 }

@@ -3,7 +3,11 @@ package com.example.checkerstry
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -15,6 +19,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.cardview.widget.CardView
+import androidx.core.view.GravityCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import com.example.checkerstry.classes.GameData
 import com.example.checkerstry.classes.OnlineGameData
 import com.example.checkerstry.classes.Piece
@@ -26,6 +33,7 @@ import com.google.firebase.ktx.Firebase
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
+    lateinit var toggle: ActionBarDrawerToggle
     private lateinit var binding: ActivityMainBinding
     lateinit var passAndPlay: CardView
     lateinit var onlineGame: CardView
@@ -36,25 +44,32 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.appBarMain.toolbar)
+        toggle = ActionBarDrawerToggle(this, binding.drawerLayout, R.string.open, R.string.close)
+        binding.drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+        if (savedInstanceState == null)
+        {
+            changeFragment(R.id.nav_home)
+            binding.navView.setCheckedItem(R.id.nav_home)
         }
-        val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow), drawerLayout)
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
 
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        binding.navView.setNavigationItemSelectedListener {
+            changeFragment(it.itemId)
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
 
-        passAndPlay = findViewById(R.id.passAndPlay)
+        val defultFragment = MainMenuFragment()
+
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.flFragment, defultFragment)
+            commit()
+        }
+
+        /*passAndPlay = findViewById(R.id.passAndPlay)
         onlineGame = findViewById(R.id.onlineGame)
         gameAnalysis = findViewById(R.id.analysys)
         passAndPlay.setOnClickListener {
@@ -76,17 +91,45 @@ class MainActivity : AppCompatActivity() {
             {
                 val r = e.message
             }
+        }*/
+    }
+
+    fun changeFragment(itemId: Int)
+    {
+        var fragment: Fragment? = null
+        when(itemId)
+        {
+            R.id.nav_play_online -> fragment = OnlineGameFragment()
+            R.id.nav_play_offline -> fragment = OfflineGameFragment()
+            R.id.nav_home -> fragment = MainMenuFragment()
+        }
+        if (fragment == null) return
+
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.flFragment, fragment)
+            commit()
         }
     }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
+        if (toggle.onOptionsItemSelected(item))
+        {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    override fun onBackPressed() {
+        val dialog = AlertDialog.Builder(this)
+            .setMessage("Are You Sure You Want To Log out?")
+            .setPositiveButton("Yes") { _, _ ->
+                super.onBackPressed()
+            }
+            .setNegativeButton("no") { _, _ -> }
+            .create()
+
+        dialog.show()
     }
+
+
 }
