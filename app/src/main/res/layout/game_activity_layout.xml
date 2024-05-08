@@ -14,7 +14,7 @@
         android:padding="5dp"
         android:id="@+id/passAndPlay"
         app:cardCornerRadius="5dp"
-        android:layout_margin="3dp"
+        android:layout_margin="10dp"
         android:background="@color/playerDataBackground"
         android:layout_marginVertical="10dp">
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -33,15 +33,21 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"/>
 
-            <TextView
-                android:id="@+id/tvBlackTimer"
+            <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/timerBackgroundColor"
-                android:textColor="@color/white"
-                android:text="00:00"
-                android:textSize="25sp"
-                android:padding="2dp"/>
+                app:cardCornerRadius="5dp">
+
+                <TextView
+                    android:id="@+id/tvBlackTimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/timerBackgroundColor"
+                    android:textColor="@color/white"
+                    android:text="00:00"
+                    android:textSize="25sp"
+                    android:padding="2dp"/>
+            </androidx.cardview.widget.CardView>
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.cardview.widget.CardView>
 
@@ -61,7 +67,7 @@
         android:padding="5dp"
         android:id="@+id/onlineGame"
         app:cardCornerRadius="5dp"
-        android:layout_margin="3dp"
+        android:layout_margin="10dp"
         android:background="#31455a"
         android:layout_marginVertical="10dp">
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -80,15 +86,25 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"/>
 
-            <TextView
-                android:id="@+id/tvWhiteTimer"
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/timerBackgroundColor"
-                android:textColor="@color/white"
-                android:text="00:00"
-                android:textSize="25sp"
-                android:padding="2dp"/>
+                app:cardCornerRadius="5dp">
+
+                <TextView
+                    android:id="@+id/tvWhiteTimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/timerBackgroundColor"
+                    android:textColor="@color/white"
+                    android:text="00:00"
+                    android:textSize="25sp"
+                    android:padding="2dp"/>
+            </androidx.cardview.widget.CardView>
+
+
+
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.cardview.widget.CardView>
 

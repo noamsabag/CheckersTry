@@ -13,6 +13,11 @@
         android:theme="@style/Theme.CheckersTry"
         tools:targetApi="31">
         <activity
+            android:name=".MatchLoadingActivity"
+            android:exported="false"
+            android:label="@string/title_activity_match_loading"
+            android:theme="@style/Theme.CheckersTry" />
+        <activity
             android:name=".GameHistoryActivity"
             android:exported="false"
             android:label="@string/title_activity_game_history"

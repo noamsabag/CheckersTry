@@ -1,5 +1,8 @@
 package com.example.checkerstry.classes
 
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.auth.User
@@ -109,12 +112,25 @@ object FirebaseUsersHelper {
 
     fun loadGameHistory()
     {
+
+        Firebase.database.getReference("$USERS_PATH/${UserData.userId}/games").orderByKey().addListenerForSingleValueEvent(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                snapshot.children.forEach {
+                    gamesPlayed.add(loadGameData(it.key!!))
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+/*
         Firebase.database.getReference("$USERS_PATH/${UserData.userId}").child("games").get().addOnCompleteListener {
             it.result.children.forEach {game ->
                 gamesPlayed.add(loadGameData(game.key!!))
             }
-
-        }
+        }*/
     }
 
     fun loadGameData(gameId: String): FinishedGameData
@@ -157,5 +173,7 @@ object FirebaseUsersHelper {
 
         return game
     }
+
+
 
 }

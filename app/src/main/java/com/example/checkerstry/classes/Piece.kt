@@ -48,4 +48,9 @@ class Piece(val _player: Player = Player.White, var _boardSize: Int = 8)
         }
         return 1
     }
+
+    fun copy(): Piece
+    {
+        return Piece(_player, _boardSize).also { if (this._isQueen) it.Queen() }
+    }
 }

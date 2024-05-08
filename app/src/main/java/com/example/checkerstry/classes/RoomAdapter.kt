@@ -2,7 +2,9 @@ package com.example.checkerstry.classes
 
 import android.content.ContentValues
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.util.Log
+import com.example.checkerstry.GameActivity
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.values
@@ -56,5 +58,28 @@ object RoomAdapter
             dbRef.child("state").setValue(GameState.Ready)
         }
         dbRef.child("playersNum").setValue(num)
+    }
+    fun startGame(gameId: String, openGame: () -> Unit)
+    {
+        val dbRef = Firebase.database.getReference("games/${gameId}/players")
+        GameData.setGameId(gameId)
+        Firebase.database.getReference("games/${gameId}").child("gameType").get().addOnCompleteListener {
+            try {
+                GameData.setGameType(it.result.getValue(GameType::class.java)!!)
+            } catch (e: Exception) {
+                Log.e(ContentValues.TAG, e.message.toString())
+                throw e
+            }
+            dbRef.get().addOnCompleteListener {
+                if (it.result.children.first()
+                        .getValue(String::class.java) == UserData.userId
+                ) {
+                    GameData.addMoveProovidor(Player.Black, MoveProvioderType.ONLINE)
+                } else {
+                    GameData.addMoveProovidor(Player.White, MoveProvioderType.ONLINE)
+                }
+                openGame()
+            }
+        }
     }
 }

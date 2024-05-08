@@ -97,4 +97,5 @@
     <string name="close">Close</string>
     <string name="regular_game">Regular Game</string>
     <string name="analyze_past_games">Analyze Past Games</string>
+    <string name="title_activity_match_loading">MatchLoadingActivity</string>
 </resources>

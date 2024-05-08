@@ -1,53 +1,68 @@
 package com.example.checkerstry.classes
 
-class CpuPlayer(var game: IGame, val player: Player) : MoveProvider
-{
-    override fun onChanged(value: Player) {
+import android.os.Handler
+import android.os.Looper
 
+class CpuPlayer(var game: IGame, val player: Player) : MoveProvider, Thread()
+{
+    val handler = Handler(Looper.getMainLooper())
+
+    override fun run()
+    {
+        try {
+            game.doMove(getBestMove())
+        }
+        catch (e: Exception)
+        {
+            val r = e.message
+        }
+    }
+    override fun onChanged(value: Player) {
+        if (value == player)
+        {
+            start()
+        }
     }
 
-    private  fun getBestMove()
+    private  fun getBestMove(): Move
     {
         val workingGame = this.game.copy()
-        var maxRating: Int = 0
+        var maxRating: Int = Int.MIN_VALUE
         var bestMove = Move()
-        for (pos in game.getPoses())
-        {
-            for (move in game.getMoves(pos))
+        val moves = workingGame!!.getAllMoves()
+        moves.forEach {move ->
+            workingGame!!.doMove(move.copy())
+            val rating = -this.rateBoard(workingGame!!, 2)
+            if (rating > maxRating)
             {
-                game.doMove(move)
-                val rating = this.rateBoard(game, 10)
-                if (rating > maxRating)
-                {
-                    maxRating = rating
-                    bestMove = move
-                }
-                game.unDoMove(move)
+                maxRating = rating
+                bestMove = move
             }
+            workingGame!!.unDoMove(move.copy())
         }
 
+        return bestMove
     }
 
-    private fun rateBoard(game: IGame, depth : Int = 5) : Int
+    private fun rateBoard(workingGame: IGame, depth : Int = 8) : Int
     {
         if (depth == 0)
         {
-            return game.getRating()
+            return workingGame.getRating()
         }
         var maxRating: Int = Int.MIN_VALUE
-        for (pos in game.getPoses())
+        val moves =  workingGame.getAllMoves()
+        for (move in moves)
         {
-            for (move in game.getMoves(pos))
+            workingGame.doMove(move.copy())
+            val rating = -this.rateBoard(workingGame, depth - 1)
+            if (rating > maxRating)
             {
-                game.doMove(move)
-                val rating = -this.rateBoard(game, depth - 1)
-                if (rating > maxRating)
-                {
-                    maxRating = rating
-                }
-                game.unDoMove(move)
+                maxRating = rating
             }
+            workingGame.unDoMove(move.copy())
         }
+
         return maxRating
     }
 }

@@ -73,6 +73,16 @@ class RegularGame(val size: Int): IGame
 
     override fun doMove(move: Move)
     {
+        val saver = board[move.pos]
+        board[move.pos] = null
+        board[move.steps.last()] = saver
+
+        for (key in move.eaten.keys) {
+            board[key] = null
+        }
+        val move2 = move.copy()
+        val endPos: Pos = move.steps.last()
+        /*
         val steps = move.steps
         var pos = move.pos
         val move2 = move.copy()
@@ -93,7 +103,7 @@ class RegularGame(val size: Int): IGame
             }
 
             move.steps.removeAt(0)
-        }
+        }*/
         if (endPos.y == 0 && board[endPos]?._player == Player.Black)
         {
             board[endPos]?.Queen()
@@ -103,6 +113,7 @@ class RegularGame(val size: Int): IGame
             board[endPos]?.Queen()
         }
         isMovesInitialized = false
+        moves = mutableListOf()
         lastMove = move2
         _turn.value = _turn.value?.next()
     }

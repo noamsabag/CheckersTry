@@ -6,6 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.checkerstry.classes.GameData
+import com.example.checkerstry.classes.MoveProvioderType
+import com.example.checkerstry.classes.Player
 import com.example.checkerstry.databinding.FragmentMainMenuBinding
 import com.example.checkerstry.databinding.FragmentOfflineGameBinding
 
@@ -25,7 +28,7 @@ class MainMenuFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.quickMatch.setOnClickListener{
-            val intent = Intent(context, RoomsActivity::class.java)
+            val intent = Intent(context, MatchLoadingActivity::class.java)
             startActivity(intent)
         }
 
@@ -35,6 +38,7 @@ class MainMenuFragment : Fragment() {
         }
 
         binding.playAginstCpu.setOnClickListener{
+            GameData.getMoveProviders()[Player.Black] = MoveProvioderType.CPU
             val intent = Intent(context, GameActivity::class.java)
             startActivity(intent)
         }

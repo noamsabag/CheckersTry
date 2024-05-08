@@ -44,6 +44,10 @@ class GameActivityViewModel() : ViewModel() {
             {
                 return OnlineGameHandler(game, OnlineGameData(), player, gameId)
             }
+            else if (moveProvioderType == MoveProvioderType.CPU)
+            {
+                return CpuPlayer(game, player)
+            }
             return OnlineGameHandler(game, OnlineGameData(), player, gameId)
         }
     }
@@ -54,7 +58,6 @@ class GameActivityViewModel() : ViewModel() {
 
         try {
             _timeLeft.value = 0
-
         }
         catch (e: Exception)
         {
@@ -79,13 +82,22 @@ class GameActivityViewModel() : ViewModel() {
             {
                 endGame(res)
             }
-            timer = object: CountDownTimer(60_000, 1_000){
+            timer = object: CountDownTimer(62_000, 1_000){
                 override fun onTick(millisUntilFinished: Long) {
-                    _timeLeft.value = (millisUntilFinished / 1000).toInt()
+                    if (millisUntilFinished < 2_500)
+                    {
+                        onFinish()
+                        return
+                    }
+                    _timeLeft.value = ((millisUntilFinished - 2_000) / 1000).toInt()
                 }
 
                 override fun onFinish() {
-                    if (GameData.getMoveProviders().keys.size == 0 && turn.value != GameData.getMoveProviders().keys.first())
+                    if (GameData.getMoveProviders().keys.size == 0 || turn.value != GameData.getMoveProviders().keys.first())
+                    {
+                        game.doMove(game.getAllMoves().random())
+                    }
+                    else
                     {
                         endGame(turn.value!!.next())
                     }

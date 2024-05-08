@@ -57,6 +57,16 @@ class RoomsActivity : AppCompatActivity() {
 
 
 
+
+        btnCreateRoom.setOnClickListener{
+           createRoom()
+        }
+    }
+
+
+
+    fun createRoom()
+    {
         val valueEventListner = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.getValue(GameState::class.java) == GameState.Ready)
@@ -72,34 +82,30 @@ class RoomsActivity : AppCompatActivity() {
 
         }
 
-        btnCreateRoom.setOnClickListener{
-            gameId = Random.nextInt(0, 9999).toString()
-            val gameType = GameTypeDictionary.dictionary[spnGameTypeSelector.selectedItem.toString()]!!
+        gameId = Random.nextInt(0, 9999).toString()
+        val gameType = GameTypeDictionary.dictionary[spnGameTypeSelector.selectedItem.toString()]!!
 
-            RoomAdapter.createRoom(gameId, gameType)
-            RoomAdapter.addPlayerToRoom(gameId, UserData.userId)
-            Firebase.database.getReference("games/${gameId}/state").addValueEventListener(valueEventListner)
-            dialog = Dialog(this)
-            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog.setCancelable(false)
-            dialog.setContentView(R.layout.waiting_room_layout)
-            val tvRoomId: TextView = dialog.findViewById(R.id.tvRoomId)
-            tvRoomId.text = "Room Id:${gameId}"
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        RoomAdapter.createRoom(gameId, gameType)
+        RoomAdapter.addPlayerToRoom(gameId, UserData.userId)
+        Firebase.database.getReference("games/${gameId}/state").addValueEventListener(valueEventListner)
+        dialog = Dialog(this)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.waiting_room_layout)
+        val tvRoomId: TextView = dialog.findViewById(R.id.tvRoomId)
+        tvRoomId.text = "Room Id:${gameId}"
+        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-            val btn : Button = dialog.findViewById(R.id.btnFragmentLeave)
+        val btn : Button = dialog.findViewById(R.id.btnFragmentLeave)
 
-            btn.setOnClickListener{
-                val dbRef = Firebase.database.getReference("games")
-                dbRef.child(gameId).removeValue()
-                dialog.dismiss()
-            }
-
-            dialog.show()
+        btn.setOnClickListener{
+            val dbRef = Firebase.database.getReference("games")
+            dbRef.child(gameId).removeValue()
+            dialog.dismiss()
         }
+
+        dialog.show()
     }
-
-
 
     fun joinRoom()
     {
@@ -128,27 +134,9 @@ class RoomsActivity : AppCompatActivity() {
     fun startGame()
     {
         try {
-            val dbRef = Firebase.database.getReference("games/${gameId}/players")
-            GameData.setGameId(gameId)
-            Firebase.database.getReference("games/${gameId}").child("gameType").get().addOnCompleteListener {
-                try {
-                    GameData.setGameType(it.result.getValue(GameType::class.java)!!)
-                } catch (e: Exception) {
-                    Log.e(ContentValues.TAG, e.message.toString())
-                    throw e
-                }
-                dbRef.get().addOnCompleteListener {
-                    if (it.result.children.first()
-                            .getValue(String::class.java) == UserData.userId
-                    ) {
-                        GameData.addMoveProovidor(Player.Black, MoveProvioderType.ONLINE)
-                    } else {
-                        GameData.addMoveProovidor(Player.White, MoveProvioderType.ONLINE)
-                    }
-                    val intent = Intent(this, GameActivity::class.java)
-                    startActivity(intent)
-
-                }
+            RoomAdapter.startGame(gameId) {
+                val intent = Intent(this, GameActivity::class.java)
+                startActivity(intent)
             }
         }
         catch(e : Exception)

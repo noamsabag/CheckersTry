@@ -10,6 +10,29 @@ class Board(val _size:Int): ArrayList<ArrayList<Piece?>>()
 
     fun copy() : Board
     {
-        throw NotImplementedError()
+        val output = Board(_size)
+        for (i in 0 until size)
+        {
+            val list: ArrayList<Piece?> = arrayListOf()
+            for (j in 0 until size)
+            {
+                list.add(null)
+            }
+            output.add(list)
+        }
+
+        for (i in 0 until _size)
+        {
+            for (j in 0 until _size)
+            {
+                output[i][j] = null
+                if (this[i][j] != null)
+                {
+                    output[i][j] = this[i][j]?.copy()
+                }
+            }
+        }
+
+        return output
     }
 }
