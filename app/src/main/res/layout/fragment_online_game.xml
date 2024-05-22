@@ -25,6 +25,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvUserName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="User Name (800)"
@@ -33,6 +34,7 @@
                 android:layout_margin="8dp"/>
 
             <TextView
+                android:id="@+id/tvGamesPlayed"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
@@ -41,6 +43,7 @@
                 android:layout_margin="8dp"/>
 
             <TextView
+                android:id="@+id/tvWinRate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"

@@ -3,6 +3,8 @@ package com.example.checkerstry
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
@@ -22,11 +24,33 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 class MatchLoadingActivity : AppCompatActivity() {
-
+    private lateinit var thread: Thread
+    private val handler = Handler(Looper.getMainLooper())
     private lateinit var binding: ActivityMatchLoadingBinding
+    private val dbRef = Firebase.database.getReference(QUICK_MATCH_PATH)
+    private var key = ""
+    private val valueEventListener = object : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            val roomId = snapshot.getValue(String::class.java)!!
+            if (roomId != "")
+            {
+                RoomAdapter.addPlayerToRoom(roomId, UserData.userId)
+                dbRef.child(key).removeValue()
+                RoomAdapter.startGame(roomId) {
+                    val intent = Intent(this@MatchLoadingActivity, GameActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            TODO("Not yet implemented")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +58,6 @@ class MatchLoadingActivity : AppCompatActivity() {
         binding = ActivityMatchLoadingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val gameType = GameType.RegularGame
-        val dbRef = Firebase.database.getReference(QUICK_MATCH_PATH)
         dbRef.orderByKey().addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach {
@@ -75,6 +98,41 @@ class MatchLoadingActivity : AppCompatActivity() {
                 TODO("Not yet implemented")
             }
         })
+
+        var numberOfDots = 0
+        thread = object: Thread() {
+            override fun run() {
+                val dots = listOf(".", "..", "...")
+                while (true)
+                {
+                    numberOfDots++
+                    numberOfDots %= 3
+                    try {
+                        handler.post {
+                            binding.tvSearchingForPlayers.text = buildString {
+                                append("searching for players ")
+                                append(dots[numberOfDots])
+                            }
+                        }
+                        sleep(500)
+                    }
+                    catch (e: Exception)
+                    {
+                        val t = e.message
+                    }
+                }
+            }
+        }
+        thread.start()
+
+        binding.btnCancel.setOnClickListener {
+            try {
+                dbRef.child(key).child("roomId").removeEventListener(valueEventListener)
+                dbRef.child(key).removeValue()
+            }
+            catch (_: Exception) {}
+            this.onBackPressed()
+        }
     }
 
 
@@ -82,28 +140,15 @@ class MatchLoadingActivity : AppCompatActivity() {
     {
         UserData.userId = "2"
         val gameType = GameType.RegularGame
-
-        val dbRef = Firebase.database.getReference(QUICK_MATCH_PATH)
-        val key = dbRef.push().key!!
+        key = dbRef.push().key!!
         dbRef.child(key).child("gameType").setValue(gameType)
         dbRef.child(key).child("roomId").setValue("")
-        dbRef.child(key).child("roomId").addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val roomId = snapshot.getValue(String::class.java)!!
-                if (roomId != "")
-                {
-                    RoomAdapter.addPlayerToRoom(roomId, UserData.userId)
-                    RoomAdapter.startGame(roomId) {
-                        val intent = Intent(this@MatchLoadingActivity, GameActivity::class.java)
-                        startActivity(intent)
-                    }
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
+        dbRef.child(key).child("roomId").addValueEventListener(valueEventListener)
     }
 
+    override fun onDestroy()
+    {
+        thread.interrupt()
+        super.onDestroy()
+    }
 }

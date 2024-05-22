@@ -12,7 +12,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:padding="5dp"
-        android:id="@+id/passAndPlay"
         app:cardCornerRadius="5dp"
         android:layout_margin="10dp"
         android:background="@color/playerDataBackground"
@@ -25,6 +24,7 @@
             android:gravity="center_vertical">
 
             <TextView
+                android:id="@+id/tvBlackPlayerData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Black Player"
@@ -65,7 +65,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:padding="5dp"
-        android:id="@+id/onlineGame"
         app:cardCornerRadius="5dp"
         android:layout_margin="10dp"
         android:background="#31455a"
@@ -78,6 +77,7 @@
             android:gravity="center_vertical">
 
             <TextView
+                android:id="@+id/tvWhitePlayerData"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="White Player"

@@ -29,6 +29,8 @@ class LoginPage : AppCompatActivity(), View.OnClickListener
     {
 
         val dbRef = Firebase.database.getReference(USERS_PATH)
+        dbRef.child("1").child("userName").setValue("User Name 1")
+        dbRef.child("2").child("userName").setValue("User Name 2")
 
         dbRef.child("1").child(GAMES_PATH).child("-Nx6TRibEnwCZPcHORub").setValue(1)
         dbRef.child("1").child(GAMES_PATH).child("-Nx7FuNpkOU1tbBwYe7x").setValue(1)
@@ -48,6 +50,9 @@ class LoginPage : AppCompatActivity(), View.OnClickListener
 
         btnSignUp.setOnClickListener(this)
         btnLogIn.setOnClickListener(this)
+
+        val intent1 = Intent(this, OnlinePlayersCounter::class.java)
+        startService(intent1)
 
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

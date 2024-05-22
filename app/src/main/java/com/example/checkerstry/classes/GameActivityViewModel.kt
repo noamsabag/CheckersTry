@@ -16,6 +16,9 @@ import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.checkerstry.GameActivity
 import com.example.checkerstry.R
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
@@ -24,10 +27,16 @@ import kotlin.Exception
 
 class GameActivityViewModel() : ViewModel() {
 
-    val game: IGame = RegularGame(8)
+    val game: IGame = RegularGame(8) {   property, oldValue, newValue ->
+        _turn.value = newValue
+    }
     val moves = arrayListOf<Move>()
+    val blackPlayer = User()
+    val whitePlayer = User()
+    private val _turn = MutableLiveData<Player>(Player.White)
     val turn: LiveData<Player>
-        get() = game.turn
+        get() = _turn
+
     private val moveProviders: MutableList<MoveProvider> = mutableListOf()
     private val _timeLeft = MutableLiveData<Int>(0)
     lateinit var timer: CountDownTimer
@@ -64,6 +73,20 @@ class GameActivityViewModel() : ViewModel() {
             val r = e.message
         }
         GameData.getMoveProviders().forEach {
+            if (it.value == MoveProvioderType.ONLINE)
+            {
+                Firebase.database.getReference("$GAMES_PATH/${GameData.getGameId()}/players").addListenerForSingleValueEvent(object: ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        FirebaseUsersHelper.loadUser(snapshot.children.first().getValue(String::class.java)!!, whitePlayer)
+                        FirebaseUsersHelper.loadUser(snapshot.children.last().getValue(String::class.java)!!, blackPlayer)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                })
+            }
             moveProviders.add(MoveProviderFactory.create(it.key, it.value, game, GameData.getGameId()))
         }
 

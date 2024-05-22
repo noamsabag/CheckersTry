@@ -28,7 +28,7 @@ class OnlineGameHandler(var game: IGame, var onlineGameData: OnlineGameData, val
             override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
                 try
                 {
-                    if (game.turn.value != player) return
+                    if (game.turn != player) return
                     Log.w(TAG, "onChildAdded:" + dataSnapshot.key!!)
                     val move = dataSnapshot.getValue<Move>()!!
                     if (move != game.lastMove)
@@ -65,7 +65,7 @@ class OnlineGameHandler(var game: IGame, var onlineGameData: OnlineGameData, val
     }
 
     override fun onChanged(value: Player) {
-        val  turn = game.turn.value!!.previous()
+        val  turn = game.turn.previous()
         if (game.lastMove == null || turn in players)
             return
 

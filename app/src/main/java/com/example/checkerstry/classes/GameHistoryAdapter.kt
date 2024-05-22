@@ -1,6 +1,7 @@
 package com.example.checkerstry.classes
 
 import android.app.Activity
+import android.content.Context
 import android.service.autofill.UserData
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.checkerstry.R
 
-class GameHistoryAdapter(private val context: Activity, private val games: ArrayList<FinishedGameData>): ArrayAdapter<FinishedGameData>(context, R.layout.game_item, games) {
+class GameHistoryAdapter(private val context: Context, private val games: ArrayList<FinishedGameData>): ArrayAdapter<FinishedGameData>(context, R.layout.game_item, games) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val inflater = LayoutInflater.from(context)
@@ -23,12 +24,12 @@ class GameHistoryAdapter(private val context: Activity, private val games: Array
         if (games[position].winner.userId == com.example.checkerstry.classes.UserData.userId)
         {
             ivGameResult.setImageResource(R.drawable.win_icon)
-            tvUserName.text = "${games[position].looser.userId}(${games[position].looser.eloRanking})"
+            tvUserName.text = "${games[position].looser.userName}(${games[position].looser.eloRanking})"
         }
         else
         {
             ivGameResult.setImageResource(R.drawable.loss_icon)
-            tvUserName.text = "${games[position].winner.userId}(${games[position].winner.eloRanking})"
+            tvUserName.text = "${games[position].winner.userName}(${games[position].winner.eloRanking})"
         }
 
         return view

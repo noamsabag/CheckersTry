@@ -2,6 +2,8 @@ package com.example.checkerstry
 
 import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.BoringLayout
 import android.util.Log
 import android.view.ViewGroup
@@ -18,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColor
 import androidx.lifecycle.ViewModelProvider
+import com.example.checkerstry.classes.DarkGameView
 import com.example.checkerstry.classes.GameActivityViewModel
 import com.example.checkerstry.classes.GameData
 import com.example.checkerstry.classes.GameState
@@ -46,10 +49,13 @@ import java.lang.Exception
 
 class GameActivity : ComponentActivity()
 {
+    val handler = Handler(Looper.getMainLooper())
     lateinit var gameView: GameView
     lateinit var llLayout: LinearLayout
     lateinit var blackTimer: TextView
     lateinit var whiteTimer: TextView
+    lateinit var blackPlayerData: TextView
+    lateinit var whitePlayerData: TextView
     var player = Player.White
 
     companion object Pictures
@@ -58,6 +64,7 @@ class GameActivity : ComponentActivity()
             "b" to R.drawable.black_squere,
             "w" to R.drawable.white_squere,
             "T" to R.drawable.target,
+            "d" to R.drawable.dark_squere,
             Piece(Player.Black, 0).toString() to R.drawable.b,
             Piece(Player.White, 0).toString() to R.drawable.w,
             Piece(Player.Black, 0).also { it.Queen() }.toString() to R.drawable.bq,
@@ -70,6 +77,8 @@ class GameActivity : ComponentActivity()
 
         blackTimer = findViewById(R.id.tvBlackTimer)
         whiteTimer = findViewById(R.id.tvWhiteTimer)
+        blackPlayerData = findViewById(R.id.tvBlackPlayerData)
+        whitePlayerData = findViewById(R.id.tvWhitePlayerData)
         val viewModel = ViewModelProvider(this).get(GameActivityViewModel::class.java)
         val game = viewModel.game
         if (GameData.getMoveProviders().size == 0)
@@ -79,13 +88,26 @@ class GameActivity : ComponentActivity()
         else
         {
             gameView = GameView(this, listOf(GameData.getMoveProviders().keys.first().next()), 8, Pictures.pics, game as RegularGame)
-
         }
+
+        if (GameData.getMoveProviders().size != 0 && GameData.getMoveProviders().values.first() == MoveProvioderType.ONLINE)
+        {
+            object: Thread() {
+                override fun run() {
+                    sleep(1_300)
+                    handler.post {
+                        blackPlayerData.text = "${viewModel.blackPlayer.userName}(${viewModel.blackPlayer.eloRanking})"
+                        whitePlayerData.text = "${viewModel.whitePlayer.userName}(${viewModel.whitePlayer.eloRanking})"
+                    }
+                }
+            }.start()
+        }
+
         viewModel.turn.observe(this, gameView)
         viewModel.timeLeft.observe(this) {
             var otherBtn = blackTimer
             var btn = whiteTimer
-            if (game.turn.value == Player.Black)
+            if (game.turn == Player.Black)
             {
                 otherBtn = whiteTimer
                 btn = blackTimer

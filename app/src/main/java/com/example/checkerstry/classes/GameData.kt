@@ -5,12 +5,14 @@ import java.util.Dictionary
 enum class GameType
 {
     RegularGame,
+    CheckersInTheDark,
     SmallGame
 }
 
 object GameTypeDictionary
 {
-    val dictionary = hashMapOf("RegularGame" to GameType.RegularGame)
+    val dictionary = hashMapOf("Regular Game" to GameType.RegularGame,
+                                "Checkers In The Dark" to GameType.CheckersInTheDark)
 }
 
 

@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import java.util.Dictionary
 import kotlin.properties.Delegates
 
-class GameView(c: Context, val players: List<Player>, boardSize: Int, pictures: Map<String, Int>, val game: RegularGame): GridLayout(c), View.OnClickListener, MoveProvider
+open class GameView(c: Context, val players: List<Player>, boardSize: Int, pictures: Map<String, Int>, val game: RegularGame): GridLayout(c), View.OnClickListener, MoveProvider
 {
     var buttons: List<List<CheckersButton>>
     var selectedPiece: CheckersButton? = null
@@ -36,7 +36,7 @@ class GameView(c: Context, val players: List<Player>, boardSize: Int, pictures: 
 
     override fun onChanged(value: Player) { updateBoard()}
 
-    private fun updateBoard()
+    protected open fun updateBoard()
     {
         for (i in buttons.indices)
         {
@@ -54,7 +54,7 @@ class GameView(c: Context, val players: List<Player>, boardSize: Int, pictures: 
         if (v is CheckersButton)
         {
             val btn: CheckersButton = v
-            if (btn.piece?._player in players && btn.piece?._player == game.turn.value)
+            if (btn.piece?._player in players && btn.piece?._player == game.turn)
             {
                 this.updateBoard()
                 val moves = this.game.getMoves(btn.pos)

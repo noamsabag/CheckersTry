@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.checkerstry.classes.UserData
 import com.example.checkerstry.databinding.FragmentOnlineGameBinding
 
 class OnlineGameFragment : Fragment() {
@@ -22,6 +23,10 @@ class OnlineGameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.tvUserName.text = "${UserData.userName}(${UserData.eloRanking})"
+        binding.tvGamesPlayed.text = "Games Played: ${UserData.gamesPlayed}"
+        binding.tvWinRate.text = "Win Rate: ${UserData.gamesWon / UserData.gamesPlayed * 100}%"
 
         binding.joinCreateRoom.setOnClickListener{
             val intent = Intent(context, RoomsActivity::class.java)

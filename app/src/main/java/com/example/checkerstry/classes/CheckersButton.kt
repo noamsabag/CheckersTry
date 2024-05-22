@@ -17,6 +17,7 @@ class CheckersButton(c: Context, private val pictures: Map<String, Int>, val _po
     }
     var tileColor = Player.White
     var isTarget = false
+    var isNotDark = true
 
     val pos: Pos = _pos
         get() = Pos(field)
@@ -37,23 +38,25 @@ class CheckersButton(c: Context, private val pictures: Map<String, Int>, val _po
 
     fun updateImage()
     {
-        if ((pos.x + pos.y) % 2 == 0)
-            if (tileColor == Player.White)
-            {
-                super.setImageResource(pictures["w"]!!);
-
-            }
-            else if (isTarget)
-            {
-                super.setImageResource(pictures["T"]!!);
-            }
-            else if (piece == null)
-            {
-                super.setImageResource(pictures["b"]!!);
-            }
-            else
-            {
-                super.setImageResource(pictures[piece.toString()]!!);
-            }
+        if (!isNotDark)
+        {
+            super.setImageResource(pictures["d"]!!)
+        }
+        else if (tileColor == Player.White)
+        {
+            super.setImageResource(pictures["w"]!!)
+        }
+        else if (isTarget)
+        {
+            super.setImageResource(pictures["T"]!!)
+        }
+        else if (piece == null)
+        {
+            super.setImageResource(pictures["b"]!!)
+        }
+        else
+        {
+            super.setImageResource(pictures[piece.toString()]!!)
+        }
     }
 }

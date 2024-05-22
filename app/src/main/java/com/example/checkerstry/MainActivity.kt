@@ -102,6 +102,8 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_play_online -> fragment = OnlineGameFragment()
             R.id.nav_play_offline -> fragment = OfflineGameFragment()
             R.id.nav_home -> fragment = MainMenuFragment()
+            R.id.nav_profile_page -> startActivity(Intent(this, ProfileActivity::class.java))
+            R.id.nav_logout -> onBackPressed()
         }
         if (fragment == null) return
 

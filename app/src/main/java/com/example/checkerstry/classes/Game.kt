@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlin.math.abs
 import kotlin.properties.Delegates
+import kotlin.reflect.KProperty
 
 
 interface IGame
 {
-    val turn : LiveData<Player>
+    var turn : Player
 
     var lastMove: Move?
 
@@ -32,22 +33,23 @@ interface IGame
 
 }
 
-class RegularGame(val size: Int): IGame
+class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -> Unit = {  property, oldValue, newValue ->}): IGame
 {
     //private var board: MutableList<MutableList<Piece?>> = mutableListOf<MutableList<Piece?>>()
-    private val _turn : MutableLiveData<Player> = MutableLiveData(Player.White)
-    override val turn : LiveData<Player>
-        get() = _turn
+    override var turn : Player by Delegates.observable(Player.White) {  property, oldValue, newValue -> onTurnChanged(property, oldValue, newValue)}
+    //private val _turn : MutableLiveData<Player> = MutableLiveData(Player.White)
     override var lastMove: Move? = null
     var moves = mutableListOf<Move>()
     var isMovesInitialized = false
     var board :Board = Board(size)
+    private var rating = 0
     object Constants
     {
         const val SIZE = 8
     }
     init
     {
+        // Shai: Initialize this in Board
         for (i in 0 until size)
         {
             val list: ArrayList<Piece?> = arrayListOf()
@@ -82,6 +84,9 @@ class RegularGame(val size: Int): IGame
         }
         val move2 = move.copy()
         val endPos: Pos = move.steps.last()
+        move.eaten.values.forEach {
+            rating -= it.getRating()
+        }
         /*
         val steps = move.steps
         var pos = move.pos
@@ -104,18 +109,16 @@ class RegularGame(val size: Int): IGame
 
             move.steps.removeAt(0)
         }*/
-        if (endPos.y == 0 && board[endPos]?._player == Player.Black)
+        if (move.queen)
         {
             board[endPos]?.Queen()
         }
-        else if (endPos.y == size - 1 && board[endPos]?._player == Player.White)
-        {
-            board[endPos]?.Queen()
-        }
+
         isMovesInitialized = false
         moves = mutableListOf()
         lastMove = move2
-        _turn.value = _turn.value?.next()
+        turn = turn.next()
+
     }
 
     fun basicGetMoves(pos: Pos, directions: List<Pos>? = null, isChain: Boolean = false): List<Move>
@@ -200,13 +203,24 @@ class RegularGame(val size: Int): IGame
             val temp = mutableListOf<Move>()
             for (pos in getPoses())
             {
-                if (board[pos] != null && board[pos]!!._player == turn.value)
+                if (board[pos] != null && board[pos]!!._player == turn)
                 {
                     temp.addAll(basicGetMoves(pos))
                 }
             }
             val maxMove = temp.maxBy { it -> it.eaten.keys.size }.eaten.keys.size
-            temp.filter { it.eaten.keys.size >= maxMove }.forEach { moves.add(it)}
+            temp.filter { it.eaten.keys.size >= maxMove }.forEach {
+                val endPos = it.steps.last()
+                if (endPos.y == 0 && board[it.pos]?._player == Player.Black)
+                {
+                    it.queen = true
+                }
+                else if (endPos.y == size - 1 && board[it.pos]?._player == Player.White)
+                {
+                    it.queen = true
+                }
+                moves.add(it)
+            }
             isMovesInitialized = true
         }
     }
@@ -277,14 +291,22 @@ class RegularGame(val size: Int): IGame
         {
             board[pos] = move.eaten[pos]
         }
-        _turn.value = _turn.value?.previous()
+        move.eaten.values.forEach {
+            rating += it.getRating()
+        }
+
+        if (move.queen)
+        {
+            board[move.steps.last()]?.unQueen()
+        }
+        turn = turn.previous()
     }
 
     override fun copy() : IGame
     {
         val out = RegularGame(size)
         out.board = this.board.copy()
-        out._turn.value = this.turn.value
+        out.turn = this.turn
         out.lastMove = this.lastMove
         return out
     }
@@ -304,22 +326,6 @@ class RegularGame(val size: Int): IGame
 
     override fun getRating(): Int
     {
-        var rating: Int = 0
-        for (pos in this.getPoses())
-        {
-            if (board[pos] != null)
-            {
-                if (board[pos]!!._player == this.turn.value)
-                {
-                    rating += board[pos]!!.getRating()
-
-                }
-                else
-                {
-                    rating -= board[pos]!!.getRating()
-                }
-            }
-        }
         return rating
     }
 

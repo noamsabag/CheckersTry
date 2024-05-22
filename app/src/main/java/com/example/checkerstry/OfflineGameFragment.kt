@@ -6,6 +6,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.example.checkerstry.classes.GameData
+import com.example.checkerstry.classes.GameTypeDictionary
 import com.example.checkerstry.databinding.FragmentOfflineGameBinding
 import com.example.checkerstry.databinding.FragmentOnlineGameBinding
 
@@ -16,13 +18,15 @@ class OfflineGameFragment : Fragment() {
         get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentOfflineGameBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        GameData.setGameType(GameTypeDictionary.dictionary[binding.spnGameTypeSelector.selectedItem.toString()]!!)
 
         binding.passAndPlay.setOnClickListener{
             val intent = Intent(context, GameActivity::class.java)

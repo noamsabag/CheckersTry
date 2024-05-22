@@ -14,9 +14,10 @@ object FirebaseUsersHelper {
     const val REGULAR_ELO_CHANGE = 8
 
     val gamesPlayed: ArrayList<FinishedGameData> = arrayListOf()
-    fun initUser(userId: String)
+    fun initUser(userId: String, userName: String)
     {
         val dbRef = Firebase.database.getReference("$USERS_PATH/$userId")
+        dbRef.child("userName").setValue(userName)
         dbRef.child("eloRanking").setValue(STARTING_ELO_RANKING)
         dbRef.child("games").setValue(0)
         dbRef.child("gamesPlayed").setValue(0)
@@ -29,6 +30,7 @@ object FirebaseUsersHelper {
         if (user == null)
         {
             UserData.userId = userId
+            dbRef.child("userName").get().addOnCompleteListener { UserData.userName = it.result.getValue(String::class.java)!! }
             dbRef.child("eloRanking").get().addOnCompleteListener { UserData.eloRanking = it.result.getValue(Int::class.java)!! }
             dbRef.child("gamesPlayed").get().addOnCompleteListener { UserData.gamesPlayed = it.result.getValue(Int::class.java)!! }
             dbRef.child("gamesWon").get().addOnCompleteListener { UserData.gamesWon = it.result.getValue(Int::class.java)!! }
@@ -36,6 +38,18 @@ object FirebaseUsersHelper {
         else
         {
             user.userId = userId
+
+            dbRef.child("userName").get().addOnCompleteListener {
+                try {
+                    user.userName = it.result.getValue(String::class.java)!!
+
+                }
+                catch (e: Exception)
+                {
+                    val r = e.message
+                }
+            }
+
             dbRef.child("eloRanking").get().addOnCompleteListener {
                 try {
                     user.eloRanking = it.result.getValue(Int::class.java)!!

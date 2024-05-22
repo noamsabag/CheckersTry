@@ -20,8 +20,8 @@
     <EditText
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:hint="@string/user_name_text"
-        android:id="@+id/etUserName"
+        android:hint="@string/email_text"
+        android:id="@+id/etEmail"
         android:inputType="text"
         android:background="@color/SecondaryColor"
         android:textColorHint="#505563"
@@ -39,6 +39,19 @@
         android:background="@color/SecondaryColor"
         android:inputType="textPassword"
         android:layout_gravity="center"
+        android:padding="4dp"/>
+
+    <EditText
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/user_name_text"
+        android:id="@+id/etUsername"
+        android:textColorHint="#505563"
+        android:textColor="#505563"
+        android:background="@color/SecondaryColor"
+        android:inputType="textPassword"
+        android:layout_gravity="center"
+        android:layout_margin="20dp"
         android:padding="4dp"/>
 
     <Button

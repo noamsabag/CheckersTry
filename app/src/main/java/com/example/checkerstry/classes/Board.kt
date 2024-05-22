@@ -1,5 +1,9 @@
 package com.example.checkerstry.classes
 
+import java.math.BigInteger
+
+// Shai: Prefer composition over inheritance.
+// Shai: Use Array instead of ArrayList
 class Board(val _size:Int): ArrayList<ArrayList<Piece?>>()
 {
     operator fun get(pos: Pos) = this[pos.y][pos.x]
@@ -35,4 +39,10 @@ class Board(val _size:Int): ArrayList<ArrayList<Piece?>>()
 
         return output
     }
+}
+
+class LiteBoard(val pieces: ULong = 0xFFF0_0000_0000_0FFFu, val queens: UInt = 0x000_0000_0000_0000u, val myTurn: Boolean = true)
+{
+    operator fun get(pos: Pos): Int = (((pieces shr pos.x + 4 * pos.y) and 1u - ((pieces shr (pos.x + 4 * pos.y + 32)) and 1u)) *
+            (((queens shr pos.x + 4 * pos.y) and 1u) + 1u)).toInt()
 }

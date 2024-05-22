@@ -1,6 +1,7 @@
 <resources>
     <string-array name="game_types">
-        <item>RegularGame</item>
+        <item>Regular Game</item>
+        <item>Checkers In The Dark</item>
     </string-array>
     <string name="app_name">Checkers.com</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -98,4 +99,7 @@
     <string name="regular_game">Regular Game</string>
     <string name="analyze_past_games">Analyze Past Games</string>
     <string name="title_activity_match_loading">MatchLoadingActivity</string>
+    <string name="email_text">Email</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+    <string name="games_played">Games Played:</string>
 </resources>

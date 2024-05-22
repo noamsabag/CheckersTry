@@ -6,6 +6,7 @@ class Move(var pos: Pos = Pos())
 {
     val eaten: CustomMap = CustomMap()
     val steps = mutableListOf<Pos>()
+    var queen = false
     fun copy(): Move
     {
         val move = Move(this.pos)
