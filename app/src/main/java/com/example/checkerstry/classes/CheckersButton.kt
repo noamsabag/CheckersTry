@@ -9,12 +9,9 @@ import android.widget.ImageView
 import java.util.Dictionary
 
 
-class CheckersButton(c: Context, private val pictures: Map<String, Int>, val _pos: Pos , var piece: Piece?): androidx.appcompat.widget.AppCompatImageButton(c)
+class CheckersButton(c: Context, private val pictures: Map<String, Int>, _pos: Pos , var piece: Piece?, val boardSize: Int): androidx.appcompat.widget.AppCompatImageButton(c)
 {
-    object Constants
-    {
-        const val SIZE = 127
-    }
+    val size = (127 * (8.0 / boardSize.toDouble())).toInt()
     var tileColor = Player.White
     var isTarget = false
     var isNotDark = true
@@ -23,7 +20,7 @@ class CheckersButton(c: Context, private val pictures: Map<String, Int>, val _po
         get() = Pos(field)
     init
     {
-        super.setLayoutParams(GridLayout.LayoutParams(ViewGroup.LayoutParams(Constants.SIZE, Constants.SIZE)))
+        super.setLayoutParams(GridLayout.LayoutParams(ViewGroup.LayoutParams(size, size)))
         super.setPadding(0, 0, 0, 0)
         super.setScaleType(ImageView.ScaleType.CENTER_CROP)
         if ((pos.x + pos.y) % 2 == 0)

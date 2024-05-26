@@ -8,8 +8,9 @@ import androidx.lifecycle.Observer
 import java.util.Dictionary
 import kotlin.properties.Delegates
 
-open class GameView(c: Context, val players: List<Player>, boardSize: Int, pictures: Map<String, Int>, val game: RegularGame): GridLayout(c), View.OnClickListener, MoveProvider
+open class GameView(c: Context, val players: List<Player>, pictures: Map<String, Int>, val game: RegularGame): GridLayout(c), View.OnClickListener, MoveProvider
 {
+    val boardSize = game.size
     var buttons: List<List<CheckersButton>>
     var selectedPiece: CheckersButton? = null
     init
@@ -23,7 +24,7 @@ open class GameView(c: Context, val players: List<Player>, boardSize: Int, pictu
             val row = mutableListOf<CheckersButton>()
             for (j in 0 until boardSize)
             {
-                val newBtn = CheckersButton(c, pictures, Pos(j, boardSize - 1 - i), game.board[Pos(j, boardSize - 1 - i)])
+                val newBtn = CheckersButton(c, pictures, Pos(j, boardSize - 1 - i), game.board[Pos(j, boardSize - 1 - i)], boardSize)
                 newBtn.setOnClickListener(this)
                 row.add(newBtn)
                 this.addView(newBtn)
@@ -42,7 +43,7 @@ open class GameView(c: Context, val players: List<Player>, boardSize: Int, pictu
         {
             for (j in buttons[0].indices)
             {
-                buttons[i][j].piece = game.board[i][j]
+                buttons[i][j].piece = game.board[i, j]
                 buttons[i][j].isTarget = false
                 buttons[i][j].updateImage()
             }
@@ -54,7 +55,7 @@ open class GameView(c: Context, val players: List<Player>, boardSize: Int, pictu
         if (v is CheckersButton)
         {
             val btn: CheckersButton = v
-            if (btn.piece?._player in players && btn.piece?._player == game.turn)
+            if (btn.piece?.player in players && btn.piece?.player == game.turn)
             {
                 this.updateBoard()
                 val moves = this.game.getMoves(btn.pos)
@@ -77,6 +78,7 @@ open class GameView(c: Context, val players: List<Player>, boardSize: Int, pictu
                     }
                 }
                 this.game.doMove(m)
+                Toast.makeText(context, game.getRating().toString(), Toast.LENGTH_SHORT).show()
                 selectedPiece = null
                 this.updateBoard()
             }

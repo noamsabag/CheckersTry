@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.checkerstry.classes.GameData
 import com.example.checkerstry.classes.GameState
 import com.example.checkerstry.classes.GameType
 import com.example.checkerstry.classes.GameTypeDictionary
@@ -57,7 +58,7 @@ class MatchLoadingActivity : AppCompatActivity() {
 
         binding = ActivityMatchLoadingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val gameType = GameType.RegularGame
+        val gameType = GameData.getGameType()
         dbRef.orderByKey().addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach {
@@ -139,7 +140,7 @@ class MatchLoadingActivity : AppCompatActivity() {
     fun joinQueue()
     {
         UserData.userId = "2"
-        val gameType = GameType.RegularGame
+        val gameType = GameData.getGameType()
         key = dbRef.push().key!!
         dbRef.child(key).child("gameType").setValue(gameType)
         dbRef.child(key).child("roomId").setValue("")

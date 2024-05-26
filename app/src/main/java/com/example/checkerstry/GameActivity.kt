@@ -65,10 +65,10 @@ class GameActivity : ComponentActivity()
             "w" to R.drawable.white_squere,
             "T" to R.drawable.target,
             "d" to R.drawable.dark_squere,
-            Piece(Player.Black, 0).toString() to R.drawable.b,
-            Piece(Player.White, 0).toString() to R.drawable.w,
-            Piece(Player.Black, 0).also { it.Queen() }.toString() to R.drawable.bq,
-            Piece(Player.White, 0).also { it.Queen() }.toString() to R.drawable.wq)
+            Piece(Player.Black, false).toString() to R.drawable.b,
+            Piece(Player.White, false).toString() to R.drawable.w,
+            Piece(Player.Black, true).toString() to R.drawable.bq,
+            Piece(Player.White, true).toString() to R.drawable.wq)
     }
     override fun onCreate(savedInstanceState: Bundle?)
     {
@@ -83,11 +83,11 @@ class GameActivity : ComponentActivity()
         val game = viewModel.game
         if (GameData.getMoveProviders().size == 0)
         {
-            gameView = GameView(this, listOf(Player.Black, Player.White), 8, Pictures.pics, game as RegularGame)
+            gameView = GameView(this, listOf(Player.Black, Player.White), Pictures.pics, game as RegularGame)
         }
         else
         {
-            gameView = GameView(this, listOf(GameData.getMoveProviders().keys.first().next()), 8, Pictures.pics, game as RegularGame)
+            gameView = GameView(this, listOf(GameData.getMoveProviders().keys.first().next()), Pictures.pics, game as RegularGame)
         }
 
         if (GameData.getMoveProviders().size != 0 && GameData.getMoveProviders().values.first() == MoveProvioderType.ONLINE)

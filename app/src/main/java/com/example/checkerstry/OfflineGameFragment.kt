@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.checkerstry.classes.GameData
+import com.example.checkerstry.classes.GameType
 import com.example.checkerstry.classes.GameTypeDictionary
 import com.example.checkerstry.databinding.FragmentOfflineGameBinding
 import com.example.checkerstry.databinding.FragmentOnlineGameBinding
@@ -28,7 +29,20 @@ class OfflineGameFragment : Fragment() {
 
         GameData.setGameType(GameTypeDictionary.dictionary[binding.spnGameTypeSelector.selectedItem.toString()]!!)
 
-        binding.passAndPlay.setOnClickListener{
+        binding.cvBigGame.setOnClickListener{
+            GameData.setGameType(GameType.BigGame)
+            val intent = Intent(context, GameActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.cvRegularGame.setOnClickListener{
+            GameData.setGameType(GameType.RegularGame)
+            val intent = Intent(context, GameActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.cvSmallGame.setOnClickListener{
+            GameData.setGameType(GameType.SmallGame)
             val intent = Intent(context, GameActivity::class.java)
             startActivity(intent)
         }

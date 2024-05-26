@@ -64,63 +64,135 @@ android:orientation="vertical">
 
     </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="5dp"
-        android:id="@+id/passAndPlay"
-        app:cardCornerRadius="5dp"
-        android:layout_margin="3dp"
-        android:background="@color/playerDataBackground">
-        <androidx.appcompat.widget.LinearLayoutCompat
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:background="@color/playerDataBackground">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/board1"
-                android:layout_margin="5dp"/>
-            <TextView
-                android:layout_width="wrap_content"
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/passAndPlay"
-                android:textSize="20sp"
-                android:textColor="@android:color/white"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.cardview.widget.CardView>
+                android:layout_gravity="center_horizontal"
+                android:padding="5dp"
+                android:id="@+id/cvRegularGame"
+                app:cardCornerRadius="5dp"
+                android:layout_margin="3dp"
+                android:background="@color/playerDataBackground">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:background="@color/playerDataBackground">
 
-    <androidx.cardview.widget.CardView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:padding="5dp"
-        android:id="@+id/playAginstCpu"
-        app:cardCornerRadius="5dp"
-        android:layout_margin="3dp"
-        android:background="@color/playerDataBackground">
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:background="@color/playerDataBackground">
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/board1"
+                        android:layout_margin="5dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/regular_game"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.cardview.widget.CardView>
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:src="@drawable/board1"
-                android:layout_margin="5dp"/>
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.cardview.widget.CardView
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/play_against_cpu"
-                android:textSize="20sp"
-                android:textColor="@android:color/white"/>
-        </androidx.appcompat.widget.LinearLayoutCompat>
-    </androidx.cardview.widget.CardView>
+                android:layout_gravity="center_horizontal"
+                android:padding="5dp"
+                android:id="@+id/cvBigGame"
+                app:cardCornerRadius="5dp"
+                android:layout_margin="3dp"
+                android:background="@color/playerDataBackground">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:background="@color/playerDataBackground">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/board1"
+                        android:layout_margin="5dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/big_game"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="5dp"
+                android:id="@+id/cvSmallGame"
+                app:cardCornerRadius="5dp"
+                android:layout_margin="3dp"
+                android:background="@color/playerDataBackground">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:background="@color/playerDataBackground">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/board1"
+                        android:layout_margin="5dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/small_game"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:padding="5dp"
+                android:id="@+id/playAginstCpu"
+                app:cardCornerRadius="5dp"
+                android:layout_margin="3dp"
+                android:background="@color/playerDataBackground">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:background="@color/playerDataBackground">
+
+                    <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/board1"
+                        android:layout_margin="5dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/play_against_cpu"
+                        android:textSize="20sp"
+                        android:textColor="@android:color/white"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.cardview.widget.CardView>
+
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>
 

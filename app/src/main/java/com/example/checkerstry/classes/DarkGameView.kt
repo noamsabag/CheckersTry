@@ -2,12 +2,12 @@ package com.example.checkerstry.classes
 
 import android.content.Context
 
-class DarkGameView(c: Context, players: List<Player>, boardSize: Int, pictures: Map<String, Int>, game: RegularGame): GameView(c, players, boardSize, pictures, game) {
+class DarkGameView(c: Context, players: List<Player>, boardSize: Int, pictures: Map<String, Int>, game: RegularGame): GameView(c, players, pictures, game) {
 
     override fun updateBoard()
     {
-        val dark = Array(8) {
-           return@Array Array(8) {
+        val dark = Array(boardSize) {
+           return@Array Array(boardSize) {
                return@Array false
            }
         }
@@ -16,7 +16,7 @@ class DarkGameView(c: Context, players: List<Player>, boardSize: Int, pictures: 
         {
             for (j in buttons[0].indices)
             {
-                if (buttons[i][j].piece != null && buttons[i][j].piece!!._player == game.turn)
+                if (buttons[i][j].piece != null && buttons[i][j].piece!!.player == game.turn)
                 {
                     dark[i][j] = true
                     lightSurrounding(dark, j, i)

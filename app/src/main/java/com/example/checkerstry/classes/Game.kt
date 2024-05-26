@@ -33,7 +33,7 @@ interface IGame
 
 }
 
-class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -> Unit = {  property, oldValue, newValue ->}): IGame
+class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -> Unit = { _, _, _ ->}): IGame
 {
     //private var board: MutableList<MutableList<Piece?>> = mutableListOf<MutableList<Piece?>>()
     override var turn : Player by Delegates.observable(Player.White) {  property, oldValue, newValue -> onTurnChanged(property, oldValue, newValue)}
@@ -46,31 +46,6 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
     object Constants
     {
         const val SIZE = 8
-    }
-    init
-    {
-        // Shai: Initialize this in Board
-        for (i in 0 until size)
-        {
-            val list: ArrayList<Piece?> = arrayListOf()
-            for (j in 0 until size)
-            {
-                list.add(null)
-            }
-            board.add(list)
-        }
-
-        for (i in 0 until size * size)
-        {
-            if ((i / size + i % size) % 2 == 0)
-            {
-                if (i < size * 3) {
-                    board[i / size][i % size] = Piece(Player.White, size)
-                } else if (i >= size * 5) {
-                    board[i / size][i % size] = Piece(Player.Black, size)
-                }
-            }
-        }
     }
 
     override fun doMove(move: Move)
@@ -87,31 +62,10 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
         move.eaten.values.forEach {
             rating -= it.getRating()
         }
-        /*
-        val steps = move.steps
-        var pos = move.pos
-        val move2 = move.copy()
-        val endPos: Pos = move.steps[move.steps.count() - 1]
-        while (move.steps.isNotEmpty())
-        {
-            val tar: Pos = move.steps[0]
-            val direction = Pos(y= (tar.y - pos.y) / abs((tar.y - pos.y)), x= (tar.x - pos.x) / abs((tar.x - pos.x)))
-            board[tar] = board[pos]
-            board[pos.y][pos.x] = null
-            while (pos.x != tar.x && pos.y != tar.y)
-            {
-                if (board[pos] != null)
-                {
-                    board[pos] = null
-                }
-                pos = pos + direction
-            }
 
-            move.steps.removeAt(0)
-        }*/
         if (move.queen)
         {
-            board[endPos]?.Queen()
+            board[endPos] = Piece(board[endPos]!!.player, true)
         }
 
         isMovesInitialized = false
@@ -124,20 +78,28 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
     fun basicGetMoves(pos: Pos, directions: List<Pos>? = null, isChain: Boolean = false): List<Move>
     {
         val piece = board[pos]
+        if (piece == null) return listOf()
         val moves: MutableList<Move> = mutableListOf()
         val dirs = directions ?: this.getDirections(pos)
+        var reach = 1
+        var eatingReach = 2
+        if (piece.isQueen)
+        {
+            reach = size
+            eatingReach = size
+        }
         for (direction in dirs)
         {
             var i = 1
             var opponentsPassed = 0
             var alliesPassed = 0
-            while (!isChain && i <= piece!!._reach && board.isPosLegal(pos + direction * i) && opponentsPassed == 0 && alliesPassed == 0)
+            while (!isChain && i <= reach && board.isPosLegal(pos + direction * i) && opponentsPassed == 0 && alliesPassed == 0)
             {
                 if (board[pos + direction * i] == null)
                 {
                     moves.add(moveof(pos, pos + direction * i))
                 }
-                else if (board[pos+ direction * i]?._player == board[pos]?._player)
+                else if (board[pos+ direction * i]?.player == piece.player)
                 {
                     alliesPassed++
                 }
@@ -147,7 +109,7 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
                 }
                 i++
             }
-            while (i <= piece!!._eatingReach && board.isPosLegal(pos + direction * i) && opponentsPassed <= 1 && alliesPassed == 0)
+            while (i <= eatingReach && board.isPosLegal(pos + direction * i) && opponentsPassed <= 1 && alliesPassed == 0)
             {
                 if (board[pos + direction * i] == null && opponentsPassed == 1)
                 {
@@ -174,7 +136,7 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
                 }
                 else if (board[pos + direction * i] != null)
                 {
-                    if (board[pos + direction * i]?._player == board[pos]?._player)
+                    if (board[pos + direction * i]?.player == board[pos]?.player)
                     {
                         alliesPassed++
                     }
@@ -185,6 +147,8 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
                 }
                 i++
             }
+
+
         }
         if (isChain)
         {
@@ -203,19 +167,19 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
             val temp = mutableListOf<Move>()
             for (pos in getPoses())
             {
-                if (board[pos] != null && board[pos]!!._player == turn)
+                if (board[pos] != null && board[pos]!!.player == turn)
                 {
                     temp.addAll(basicGetMoves(pos))
                 }
             }
-            val maxMove = temp.maxBy { it -> it.eaten.keys.size }.eaten.keys.size
+            val maxMove = temp.maxBy { it.eaten.keys.size }.eaten.keys.size
             temp.filter { it.eaten.keys.size >= maxMove }.forEach {
                 val endPos = it.steps.last()
-                if (endPos.y == 0 && board[it.pos]?._player == Player.Black)
+                if (endPos.y == 0 && board[it.pos]?.player == Player.Black)
                 {
                     it.queen = true
                 }
-                else if (endPos.y == size - 1 && board[it.pos]?._player == Player.White)
+                else if (endPos.y == size - 1 && board[it.pos]?.player == Player.White)
                 {
                     it.queen = true
                 }
@@ -247,10 +211,10 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
         {
             for (j in 0 until size)
             {
-                if (board[i][j] != null && board[i][j]?._player == Player.White)
+                if (board[i, j] != null && board[i, j]?.player == Player.White)
                 {
                     white = true
-                } else if (board[i][j] != null && board[i][j]?._player == Player.Black)
+                } else if (board[i, j] != null && board[i, j]?.player == Player.Black)
                 {
                     black = true
                 }
@@ -265,13 +229,13 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
     {
         var directions = mutableListOf<Pos>()
         val piece = board[pos]
-        if (piece != null && piece._isQueen)
+        if (piece != null && piece.isQueen)
         {
             directions = mutableListOf(Pos(1, 1), Pos(1, -1), Pos(-1, 1), Pos(-1, -1))
         }
         else if (piece != null)
         {
-            if (piece._player == Player.Black)
+            if (piece.player == Player.Black)
             {
                 directions = mutableListOf(Pos(-1, -1), Pos(1, -1))
             }
@@ -297,7 +261,7 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
 
         if (move.queen)
         {
-            board[move.steps.last()]?.unQueen()
+            board[move.steps.last()] = Piece(board[move.steps.last()]!!.player, false)
         }
         turn = turn.previous()
     }
@@ -326,7 +290,16 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
 
     override fun getRating(): Int
     {
-        return rating
+        var sum = 0
+
+        for (pos in getPoses())
+        {
+            if (board[pos] != null)
+            {
+                sum += board[pos]!!.getRating()
+            }
+        }
+        return sum
     }
 
 }

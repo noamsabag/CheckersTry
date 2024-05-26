@@ -33,7 +33,7 @@ class AnalysisActivity : AppCompatActivity() {
         val viewModel = ViewModelProvider(this).get(AnalysisActivityViewModel::class.java)
         val game = viewModel.game
 
-        gameView = GameView(this, listOf(Player.Black, Player.White), 8, GameActivity.pics, game as RegularGame)
+        gameView = GameView(this, listOf(Player.Black, Player.White), GameActivity.pics, game as RegularGame)
         viewModel.turn.observe(this, gameView)
         binding.llAnalysis.addView(gameView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 

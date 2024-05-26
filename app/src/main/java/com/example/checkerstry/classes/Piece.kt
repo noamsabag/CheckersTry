@@ -13,37 +13,19 @@ enum class Player()
 }
 
 // Shai: Make Piece immutable
-class Piece(val _player: Player = Player.White, var _boardSize: Int = 8)
+class Piece(val player: Player = Player.White, val isQueen: Boolean = false)
 {
-    var _isQueen: Boolean = false  // Shai: Make private
-    var _reach: Int = 1 // Shai: This can be a function
-    var _eatingReach: Int = 2
-
-    fun Queen()
-    {
-        _isQueen = true
-        _reach = _boardSize
-        _eatingReach = _boardSize
-    }
-
-    fun unQueen()
-    {
-        _isQueen = false
-        _reach = 1
-        _eatingReach = 2
-    }
-
     override fun toString(): String
     {
-        if (_isQueen)
+        if (isQueen)
         {
-            if (_player == Player.White)
+            if (player == Player.White)
             {
                 return "WQ";
             }
             return "BQ";
         }
-        if (_player == Player.Black)
+        if (player == Player.Black)
         {
             return "B ";
         }
@@ -52,15 +34,15 @@ class Piece(val _player: Player = Player.White, var _boardSize: Int = 8)
 
     fun getRating() : Int
     {
-        if (_player == Player.Black)
+        if (player == Player.Black)
         {
-            if (_isQueen)
+            if (isQueen)
             {
                 return -5
             }
             return -1
         }
-        if (_isQueen)
+        if (isQueen)
         {
             return 5
         }
@@ -69,6 +51,6 @@ class Piece(val _player: Player = Player.White, var _boardSize: Int = 8)
 
     fun copy(): Piece
     {
-        return Piece(_player, _boardSize).also { if (this._isQueen) it.Queen() }
+        return Piece(player, isQueen)
     }
 }

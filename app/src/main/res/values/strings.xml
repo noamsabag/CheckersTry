@@ -102,4 +102,7 @@
     <string name="email_text">Email</string>
     <string name="title_activity_profile">ProfileActivity</string>
     <string name="games_played">Games Played:</string>
+    <string name="big_game">Big Game</string>
+    <string name="small_game">Small Game</string>
+    <string name="checkers_in_the_dark">Checkers In The Dark</string>
 </resources>

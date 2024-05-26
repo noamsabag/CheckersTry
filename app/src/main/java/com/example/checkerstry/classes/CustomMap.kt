@@ -13,7 +13,7 @@ class CustomMap()
         else
         {
             keys.add(pos)
-            values.add(Piece(Player.White, 0))
+            values.add(Piece(Player.White, false))
             return values.last()
         }
     }

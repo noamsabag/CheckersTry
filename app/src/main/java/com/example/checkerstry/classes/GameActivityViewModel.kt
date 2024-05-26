@@ -27,8 +27,8 @@ import kotlin.Exception
 
 class GameActivityViewModel() : ViewModel() {
 
-    val game: IGame = RegularGame(8) {   property, oldValue, newValue ->
-        _turn.value = newValue
+    val game: IGame = GameFactory.create(GameData.getGameType()) { _, _, newValue ->
+            _turn.value = newValue
     }
     val moves = arrayListOf<Move>()
     val blackPlayer = User()
@@ -45,6 +45,7 @@ class GameActivityViewModel() : ViewModel() {
     private val _winner = MutableLiveData<Player?>(null)
     val winner: LiveData<Player?>
         get() = _winner
+
 
     companion object MoveProviderFactory {
 

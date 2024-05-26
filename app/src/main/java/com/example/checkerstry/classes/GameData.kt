@@ -6,7 +6,8 @@ enum class GameType
 {
     RegularGame,
     CheckersInTheDark,
-    SmallGame
+    SmallGame,
+    BigGame
 }
 
 object GameTypeDictionary
