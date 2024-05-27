@@ -1,28 +1,24 @@
 package com.example.checkerstry.classes
 
-import android.R.attr
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.GridLayout
-import android.widget.ImageButton
-import android.widget.ImageView
-import java.util.Dictionary
 
 
-class CheckersButton(c: Context, private val pictures: Map<String, Int>, _pos: Pos , var piece: Piece?, val boardSize: Int): androidx.appcompat.widget.AppCompatImageButton(c)
+class CheckersButton(c: Context, private val pictures: Map<String, Int>, pos: Pos , var piece: Piece?, boardSize: Int): androidx.appcompat.widget.AppCompatImageButton(c)
 {
-    val size = (127 * (8.0 / boardSize.toDouble())).toInt()
-    var tileColor = Player.White
+    private val size = (127 * (8.0 / boardSize.toDouble())).toInt()
+    private var tileColor = Player.White
     var isTarget = false
     var isNotDark = true
 
-    val pos: Pos = _pos
+    val pos: Pos = pos
         get() = Pos(field)
     init
     {
         super.setLayoutParams(GridLayout.LayoutParams(ViewGroup.LayoutParams(size, size)))
         super.setPadding(0, 0, 0, 0)
-        super.setScaleType(ImageView.ScaleType.CENTER_CROP)
+        super.setScaleType(ScaleType.CENTER_CROP)
         if ((pos.x + pos.y) % 2 == 0)
         {
             tileColor = Player.Black

@@ -2,20 +2,14 @@ package com.example.checkerstry
 
 import android.os.Bundle
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import com.google.android.material.snackbar.Snackbar
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.checkerstry.classes.AnalysisActivityViewModel
-import com.example.checkerstry.classes.GameActivityViewModel
 import com.example.checkerstry.classes.GameData
 import com.example.checkerstry.classes.GameView
 import com.example.checkerstry.classes.Player
-import com.example.checkerstry.classes.RegularGame
+import com.example.checkerstry.classes.Game
 import com.example.checkerstry.databinding.ActivityAnalysisBinding
 
 class AnalysisActivity : AppCompatActivity() {
@@ -29,22 +23,35 @@ class AnalysisActivity : AppCompatActivity() {
         binding = ActivityAnalysisBinding.inflate(layoutInflater)
         setContentView(binding.root)
         gameId = intent.getStringExtra("GAME_ID")!!
-        GameData.setGameId(gameId)
+        GameData.gameId = gameId
         val viewModel = ViewModelProvider(this).get(AnalysisActivityViewModel::class.java)
         val game = viewModel.game
 
-        gameView = GameView(this, listOf(Player.Black, Player.White), GameActivity.pics, game as RegularGame)
+        gameView = GameView(this, listOf(Player.Black, Player.White), GameActivity.pics, game as Game)
         viewModel.turn.observe(this, gameView)
         binding.llAnalysis.addView(gameView, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
 
         binding.btnMoveBack.setOnClickListener{
-            game.unDoMove(viewModel.originalMoves[viewModel.currentMove].copy())
-            viewModel.currentMove--
+            if (viewModel.currentMove >= 0)
+            {
+                viewModel.moveBack()
+            }
+            else
+            {
+                Toast.makeText(this, "You Can't Move Back, This is the starting position", Toast.LENGTH_LONG).show()
+            }
         }
 
         binding.btnMoveForward.setOnClickListener{
-            viewModel.currentMove++
-            game.doMove(viewModel.originalMoves[viewModel.currentMove].copy())
+            if (viewModel.currentMove < viewModel.originalMoves.size - 1)
+            {
+                viewModel.moveForward()
+            }
+            else
+            {
+                Toast.makeText(this, "You Can't Move Forward, This is the last position", Toast.LENGTH_LONG).show()
+
+            }
         }
 
 

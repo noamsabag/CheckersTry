@@ -1,6 +1,5 @@
 package com.example.checkerstry.classes
 
-import java.util.Dictionary
 
 enum class GameType
 {
@@ -12,36 +11,21 @@ enum class GameType
 
 object GameTypeDictionary
 {
-    val dictionary = hashMapOf("Regular Game" to GameType.RegularGame,
-                                "Checkers In The Dark" to GameType.CheckersInTheDark)
+    val dictionary = hashMapOf(
+        "Regular Game" to GameType.RegularGame,
+        "Checkers In The Dark" to GameType.CheckersInTheDark,
+        "Small Game" to GameType.SmallGame,
+        "Big Game" to GameType.BigGame
+        )
 }
 
 
 object GameData
 {
-    private var gameType: GameType = GameType.RegularGame
-    private var moveProviders: HashMap<Player, MoveProvioderType> = hashMapOf()
-    private var gameId = ""
+    var gameType: GameType = GameType.RegularGame
+    var isOnline = false
+    var myPlayer = Player.White
+    var gameId = ""
 
-    fun setGameId(string: String)
-    {
-        gameId = string
-    }
-
-    fun setGameType(gameType: GameType)
-    {
-        this.gameType = gameType
-    }
-
-    fun addMoveProovidor(player: Player, moveProvioderType: MoveProvioderType)
-    {
-        this.moveProviders[player] = moveProvioderType
-    }
-
-    fun getGameType() = gameType
-
-    fun getMoveProviders() = moveProviders
-
-    fun getGameId() = gameId
 
 }

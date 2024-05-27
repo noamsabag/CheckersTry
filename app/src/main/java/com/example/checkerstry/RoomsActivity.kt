@@ -20,7 +20,6 @@ import com.example.checkerstry.classes.GameState
 import com.example.checkerstry.classes.GameType
 import com.example.checkerstry.classes.GameTypeDictionary
 import com.example.checkerstry.classes.Move
-import com.example.checkerstry.classes.MoveProvioderType
 import com.example.checkerstry.classes.Player
 import com.example.checkerstry.classes.RoomAdapter
 import com.example.checkerstry.classes.UserData
@@ -109,7 +108,6 @@ class RoomsActivity : AppCompatActivity() {
 
     fun joinRoom()
     {
-        UserData.userId = "2" // Important: Fix id
         val dbRef = Firebase.database.getReference("games")
         gameId = etRoomNumber.text.toString()
         val e = 1

@@ -8,7 +8,7 @@ import com.google.firebase.ktx.Firebase
 import java.util.Stack
 
 class AnalysisActivityViewModel: ViewModel() {
-    val game: IGame = RegularGame(8) {  property, oldValue, newValue ->
+    val game: Game = Game(8) { property, oldValue, newValue ->
         _turn.value = newValue
     }
     val originalMoves: MutableList<Move> = mutableListOf()
@@ -18,7 +18,7 @@ class AnalysisActivityViewModel: ViewModel() {
     val turn: LiveData<Player>
         get() = _turn
     init {
-        val dbRef = Firebase.database.getReference("$GAME_STORAGE_PATH/${GameData.getGameId()}")
+        val dbRef = Firebase.database.getReference("$GAME_STORAGE_PATH/${GameData.gameId}")
         dbRef.child("moves").get().addOnCompleteListener {
             it.result.children.forEach {move ->
                 originalMoves.add(move.getValue(Move::class.java)!!)
@@ -27,6 +27,16 @@ class AnalysisActivityViewModel: ViewModel() {
 
     }
 
+    fun moveForward()
+    {
+        currentMove++
+        game.doMove(originalMoves[currentMove].copy())
+    }
 
+    fun moveBack()
+    {
+        game.unDoMove(originalMoves[currentMove].copy())
+        currentMove--
+    }
 
 }

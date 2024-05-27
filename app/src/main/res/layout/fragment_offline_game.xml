@@ -49,17 +49,6 @@ android:orientation="vertical">
                 android:textSize="15sp"
                 android:layout_margin="8dp"/>
 
-            <Spinner
-                android:id="@+id/spnGameTypeSelector"
-                android:layout_width="200dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="40dp"
-                android:background="@color/timerBackgroundColor"
-                android:entries="@array/game_types"
-                android:spinnerMode="dropdown"
-                android:layout_margin="10dp"/>
-
-
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
@@ -155,35 +144,6 @@ android:orientation="vertical">
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/small_game"
-                        android:textSize="20sp"
-                        android:textColor="@android:color/white"/>
-                </androidx.appcompat.widget.LinearLayoutCompat>
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="5dp"
-                android:id="@+id/playAginstCpu"
-                app:cardCornerRadius="5dp"
-                android:layout_margin="3dp"
-                android:background="@color/playerDataBackground">
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:background="@color/playerDataBackground">
-
-                    <ImageView
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
-                        android:src="@drawable/board1"
-                        android:layout_margin="5dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/play_against_cpu"
                         android:textSize="20sp"
                         android:textColor="@android:color/white"/>
                 </androidx.appcompat.widget.LinearLayoutCompat>

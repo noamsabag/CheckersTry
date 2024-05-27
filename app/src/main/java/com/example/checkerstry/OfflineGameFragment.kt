@@ -27,28 +27,25 @@ class OfflineGameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        GameData.setGameType(GameTypeDictionary.dictionary[binding.spnGameTypeSelector.selectedItem.toString()]!!)
+        GameData.isOnline = false
+
+
 
         binding.cvBigGame.setOnClickListener{
-            GameData.setGameType(GameType.BigGame)
+            GameData.gameType = GameType.BigGame
             val intent = Intent(context, GameActivity::class.java)
             startActivity(intent)
         }
 
         binding.cvRegularGame.setOnClickListener{
-            GameData.setGameType(GameType.RegularGame)
+            GameData.gameType = GameType.RegularGame
             val intent = Intent(context, GameActivity::class.java)
             startActivity(intent)
         }
 
         binding.cvSmallGame.setOnClickListener{
-            GameData.setGameType(GameType.SmallGame)
+            GameData.gameType = GameType.SmallGame
             val intent = Intent(context, GameActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.playAginstCpu.setOnClickListener{
-            val intent = Intent(context, RoomsActivity::class.java)
             startActivity(intent)
         }
     }

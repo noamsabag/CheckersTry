@@ -3,9 +3,7 @@ package com.example.checkerstry.classes
 enum class GameState
 {
     WaitingForPlayers,
-    Ready,
-    Ongoing,
-    Finished
+    Ready
 }
 
 data class FinishedGameData(val winner: User = User(), val looser: User = User(), var gameType: GameType = GameType.RegularGame, var gameId: String = "")

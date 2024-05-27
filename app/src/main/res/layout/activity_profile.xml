@@ -95,4 +95,13 @@
 
     </androidx.cardview.widget.CardView>
 
+    <Button
+        android:id="@+id/btnDeleteAccount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Delete Acount"
+        android:backgroundTint="#b30000"
+        android:textSize="20sp"/>
+
 </LinearLayout>

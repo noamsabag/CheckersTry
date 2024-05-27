@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.checkerstry.classes.FirebaseUsersHelper
 import com.example.checkerstry.classes.GameData
 import com.example.checkerstry.classes.GameState
 import com.example.checkerstry.classes.GameType
@@ -36,10 +37,11 @@ class MatchLoadingActivity : AppCompatActivity() {
     private var key = ""
     private val valueEventListener = object : ValueEventListener {
         override fun onDataChange(snapshot: DataSnapshot) {
-            val roomId = snapshot.getValue(String::class.java)!!
-            if (roomId != "")
+            val roomId = snapshot.getValue(String::class.java)
+            if (roomId!= null && roomId != "")
             {
                 RoomAdapter.addPlayerToRoom(roomId, UserData.userId)
+                dbRef.child(key).removeEventListener(this as ValueEventListener)
                 dbRef.child(key).removeValue()
                 RoomAdapter.startGame(roomId) {
                     val intent = Intent(this@MatchLoadingActivity, GameActivity::class.java)
@@ -58,7 +60,7 @@ class MatchLoadingActivity : AppCompatActivity() {
 
         binding = ActivityMatchLoadingBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val gameType = GameData.getGameType()
+        val gameType = GameData.gameType
         dbRef.orderByKey().addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach {
@@ -139,8 +141,7 @@ class MatchLoadingActivity : AppCompatActivity() {
 
     fun joinQueue()
     {
-        UserData.userId = "2"
-        val gameType = GameData.getGameType()
+        val gameType = GameData.gameType
         key = dbRef.push().key!!
         dbRef.child(key).child("gameType").setValue(gameType)
         dbRef.child(key).child("roomId").setValue("")

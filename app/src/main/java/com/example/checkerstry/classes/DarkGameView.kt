@@ -2,7 +2,7 @@ package com.example.checkerstry.classes
 
 import android.content.Context
 
-class DarkGameView(c: Context, players: List<Player>, boardSize: Int, pictures: Map<String, Int>, game: RegularGame): GameView(c, players, pictures, game) {
+class DarkGameView(c: Context, players: List<Player>, pictures: Map<String, Int>, game: Game): GameView(c, players, pictures, game) {
 
     override fun updateBoard()
     {

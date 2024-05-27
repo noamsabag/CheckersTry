@@ -29,11 +29,14 @@ class OnlineGameFragment : Fragment() {
 
         binding.tvUserName.text = "${UserData.userName}(${UserData.eloRanking})"
         binding.tvGamesPlayed.text = "Games Played: ${UserData.gamesPlayed}"
-        binding.tvWinRate.text = "Win Rate: ${UserData.gamesWon * 100 / UserData.gamesPlayed}%"
+        val winRate = if (UserData.gamesPlayed != 0) UserData.gamesWon * 100 / UserData.gamesPlayed else 0
+        binding.tvWinRate.text = "Win Rate: $winRate%"
 
         OnlinePlayersCounter.playerCount.observe(viewLifecycleOwner) {
             binding.tvPlayersCounter.text = "Players Online: ${it}"
         }
+
+        GameData.isOnline = true
 
         binding.joinCreateRoom.setOnClickListener{
             val intent = Intent(context, RoomsActivity::class.java)
@@ -41,13 +44,13 @@ class OnlineGameFragment : Fragment() {
         }
 
         binding.quickMatchRegularGame.setOnClickListener{
-            GameData.setGameType(GameType.RegularGame)
+            GameData.gameType = GameType.RegularGame
             val intent = Intent(context, MatchLoadingActivity::class.java)
             startActivity(intent)
         }
 
         binding.quickMatchChessInTheDark.setOnClickListener{
-            GameData.setGameType(GameType.CheckersInTheDark)
+            GameData.gameType = GameType.CheckersInTheDark
             val intent = Intent(context, MatchLoadingActivity::class.java)
             startActivity(intent)
         }

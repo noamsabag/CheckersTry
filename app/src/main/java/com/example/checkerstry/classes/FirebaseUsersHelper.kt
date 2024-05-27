@@ -3,19 +3,22 @@ package com.example.checkerstry.classes
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
-import com.google.firebase.firestore.auth.User
 import com.google.firebase.ktx.Firebase
 import kotlin.math.max
 
 object FirebaseUsersHelper {
-    const val STARTING_ELO_RANKING = 800
-    const val REGULAR_ELO_CHANGE = 8
+    private const val STARTING_ELO_RANKING = 800
+    private const val REGULAR_ELO_CHANGE = 8
 
     val gamesPlayed: ArrayList<FinishedGameData> = arrayListOf()
     fun initUser(userId: String, userName: String)
     {
+        UserData.userId = userId
+        UserData.userName = userName
+        UserData.eloRanking = STARTING_ELO_RANKING
+        UserData.gamesPlayed = 0
+        UserData.gamesWon = 0
         val dbRef = Firebase.database.getReference("$USERS_PATH/$userId")
         dbRef.child("userName").setValue(userName)
         dbRef.child("eloRanking").setValue(STARTING_ELO_RANKING)
@@ -26,6 +29,7 @@ object FirebaseUsersHelper {
 
     fun loadUser(userId: String, user: com.example.checkerstry.classes.User? = null)
     {
+        UserData.userId = userId
         val dbRef = Firebase.database.getReference("$USERS_PATH/$userId")
         if (user == null)
         {
@@ -40,45 +44,19 @@ object FirebaseUsersHelper {
             user.userId = userId
 
             dbRef.child("userName").get().addOnCompleteListener {
-                try {
-                    user.userName = it.result.getValue(String::class.java)!!
-
-                }
-                catch (e: Exception)
-                {
-                    val r = e.message
-                }
+                user.userName = it.result.getValue(String::class.java)!!
             }
 
             dbRef.child("eloRanking").get().addOnCompleteListener {
-                try {
-                    user.eloRanking = it.result.getValue(Int::class.java)!!
-
-                }
-                catch (e: Exception)
-                {
-                    val r = e.message
-                }
+                user.eloRanking = it.result.getValue(Int::class.java)!!
             }
 
             dbRef.child("gamesPlayed").get().addOnCompleteListener {
-                try {
-                    user.gamesPlayed = it.result.getValue(Int::class.java)!!
-                }
-                catch (e: Exception)
-                {
-                    val r = e.message
-                }
+                user.gamesPlayed = it.result.getValue(Int::class.java)!!
             }
 
             dbRef.child("gamesWon").get().addOnCompleteListener {
-                try {
-                    user.gamesWon = it.result.getValue(Int::class.java)!!
-                }
-                catch (e: Exception)
-                {
-                    val r = e.message
-                }
+                user.gamesWon = it.result.getValue(Int::class.java)!!
             }
         }
     }
@@ -92,14 +70,7 @@ object FirebaseUsersHelper {
         dbRef.child("gamesPlayed").setValue(UserData.gamesPlayed)
         dbRef.child("gamesWon").setValue(UserData.gamesWon)
         enemyRef.child("gamesPlayed").get().addOnCompleteListener {
-            try {
-                enemyRef.child("gamesPlayed").setValue(it.result.getValue(Int::class.java)!! + 1)
-
-            }
-            catch (e: Exception)
-            {
-                val m = e.message.toString()
-            }
+            enemyRef.child("gamesPlayed").setValue(it.result.getValue(Int::class.java)!! + 1)
         }
         enemyRef.child("eloRanking").get().addOnCompleteListener {
             val enemyRanking = it.result.getValue(Int::class.java)!!
@@ -152,37 +123,19 @@ object FirebaseUsersHelper {
         val dbRef = Firebase.database.getReference("$GAME_STORAGE_PATH/$gameId")
         val winner = User()
         val looser = User()
-        val game: FinishedGameData = FinishedGameData(winner, looser, GameType.RegularGame, gameId)
+        val game = FinishedGameData(winner, looser, GameType.RegularGame, gameId)
 
 
         dbRef.child("winner").get().addOnCompleteListener {
-            try {
-                loadUser(it.result.getValue(String::class.java)!!, winner)
-            }
-            catch (e: Exception)
-            {
-                val r = e.message
-            }
+            loadUser(it.result.getValue(String::class.java)!!, winner)
         }
 
         dbRef.child("looser").get().addOnCompleteListener {
-            try {
-                loadUser(it.result.getValue(String::class.java)!!, looser)
-            }
-            catch (e: Exception)
-            {
-                val r = e.message
-            }
+            loadUser(it.result.getValue(String::class.java)!!, looser)
         }
 
         dbRef.child("gameType").get().addOnCompleteListener {
-            try {
-                game.gameType = it.result.getValue(GameType::class.java)!!
-            }
-            catch (e: Exception)
-            {
-                val r = e.message
-            }
+            game.gameType = it.result.getValue(GameType::class.java)!!
         }
 
         return game

@@ -2,6 +2,8 @@
     <string-array name="game_types">
         <item>Regular Game</item>
         <item>Checkers In The Dark</item>
+        <item>Small Game</item>
+        <Item>Big Game</Item>
     </string-array>
     <string name="app_name">Checkers.com</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

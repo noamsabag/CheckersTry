@@ -38,7 +38,7 @@ class SignUpPage : ComponentActivity(), View.OnClickListener
 
     override fun onClick(v: View?)
     {
-        FirebaseAuthHelper.createUser(etUserName.text.toString(), etPassword.text.toString()).addOnCompleteListener {
+        FirebaseAuthHelper.createUser(etEmail.text.toString(), etPassword.text.toString()).addOnCompleteListener {
             if (it.isSuccessful)
             {
                 FirebaseUsersHelper.initUser(it.result.user!!.uid, etUserName.text.toString())

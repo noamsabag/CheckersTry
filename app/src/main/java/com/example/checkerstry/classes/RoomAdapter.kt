@@ -62,10 +62,10 @@ object RoomAdapter
     fun startGame(gameId: String, openGame: () -> Unit)
     {
         val dbRef = Firebase.database.getReference("games/${gameId}/players")
-        GameData.setGameId(gameId)
+        GameData.gameId = gameId
         Firebase.database.getReference("games/${gameId}").child("gameType").get().addOnCompleteListener {
             try {
-                GameData.setGameType(it.result.getValue(GameType::class.java)!!)
+                GameData.gameType = it.result.getValue(GameType::class.java)!!
             } catch (e: Exception) {
                 Log.e(ContentValues.TAG, e.message.toString())
                 throw e
@@ -74,9 +74,11 @@ object RoomAdapter
                 if (it.result.children.first()
                         .getValue(String::class.java) == UserData.userId
                 ) {
-                    GameData.addMoveProovidor(Player.Black, MoveProvioderType.ONLINE)
+                    GameData.isOnline = true
+                    GameData.myPlayer = Player.White
                 } else {
-                    GameData.addMoveProovidor(Player.White, MoveProvioderType.ONLINE)
+                    GameData.isOnline = true
+                    GameData.myPlayer = Player.Black
                 }
                 openGame()
             }

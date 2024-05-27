@@ -2,23 +2,16 @@ package com.example.checkerstry.classes
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import android.widget.Toast
-import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.lifecycle.Observer
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.getValue
 import com.google.firebase.database.ktx.database
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.lang.Error
-import kotlin.properties.Delegates
 
-class OnlineGameHandler(var game: IGame, var onlineGameData: OnlineGameData, val player: Player, val gameId: String) : MoveProvider {
+class OnlineGameHandler(var game: Game, var onlineGameData: OnlineGameData, val player: Player, val gameId: String) : Observer<Player> {
     val moves: MutableList<Move> = mutableListOf()
     private val players: MutableList<Player>
     private val dbRef: DatabaseReference = Firebase.database.getReference("games/${gameId}")

@@ -1,6 +1,5 @@
 package com.example.checkerstry.classes
 
-import java.util.Dictionary
 
 class Move(var pos: Pos = Pos())
 {
@@ -10,6 +9,7 @@ class Move(var pos: Pos = Pos())
     fun copy(): Move
     {
         val move = Move(this.pos)
+        move.queen = this.queen
         this.steps.forEach { move.steps.add(it) }
         this.eaten.keys.forEach { move.eaten.keys.add(it)}
         this.eaten.values.forEach { move.eaten.values.add(it) }

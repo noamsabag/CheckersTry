@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/email_text"
         android:id="@+id/etEmail"
-        android:inputType="text"
+        android:inputType="textEmailAddress"
         android:background="@color/SecondaryColor"
         android:textColorHint="#505563"
         android:textColor="#505563"

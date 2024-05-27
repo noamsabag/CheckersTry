@@ -28,7 +28,7 @@ class GameHistoryFragment : Fragment() {
         binding.listView.isClickable = true
         binding.listView.adapter = GameHistoryAdapter(requireContext(), gamesList)
         binding.listView.setOnItemClickListener { parent, view, position, id ->
-            val intent = Intent(Activity(), AnalysisActivity::class.java)
+            val intent = Intent(this.activity, AnalysisActivity::class.java)
             intent.putExtra("GAME_ID", gamesList[position].gameId)
             startActivity(intent)
         }

@@ -69,29 +69,6 @@ class MainActivity : AppCompatActivity() {
             commit()
         }
 
-        /*passAndPlay = findViewById(R.id.passAndPlay)
-        onlineGame = findViewById(R.id.onlineGame)
-        gameAnalysis = findViewById(R.id.analysys)
-        passAndPlay.setOnClickListener {
-            val intent = Intent(this, GameActivity::class.java)
-            startActivity(intent)
-        }
-        onlineGame.setOnClickListener {
-
-            val intent = Intent(this, RoomsActivity::class.java)
-            startActivity(intent)
-        }
-        gameAnalysis.setOnClickListener{
-            GameData.setGameId("-Nx7FuNpkOU1tbBwYe7x")
-            val intent = Intent(this, GameHistoryActivity::class.java)
-            try {
-                startActivity(intent)
-            }
-            catch (e: Exception)
-            {
-                val r = e.message
-            }
-        }*/
     }
 
     fun changeFragment(itemId: Int)
@@ -123,7 +100,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val dialog = AlertDialog.Builder(this)
-            .setMessage("Are You Sure You Want To Log out?")
+            .setMessage("Are you sure you want to log out?")
             .setPositiveButton("Yes") { _, _ ->
                 super.onBackPressed()
             }

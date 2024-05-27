@@ -3,16 +3,13 @@ package com.example.checkerstry.classes
 import android.content.Context
 import android.view.View
 import android.widget.GridLayout
-import android.widget.Toast
 import androidx.lifecycle.Observer
-import java.util.Dictionary
-import kotlin.properties.Delegates
 
-open class GameView(c: Context, val players: List<Player>, pictures: Map<String, Int>, val game: RegularGame): GridLayout(c), View.OnClickListener, MoveProvider
+open class GameView(c: Context, val players: List<Player>, pictures: Map<String, Int>, val game: Game): GridLayout(c), View.OnClickListener, Observer<Player>
 {
     val boardSize = game.size
     var buttons: List<List<CheckersButton>>
-    var selectedPiece: CheckersButton? = null
+    private var selectedPiece: CheckersButton? = null
     init
     {
 
@@ -78,16 +75,9 @@ open class GameView(c: Context, val players: List<Player>, pictures: Map<String,
                     }
                 }
                 this.game.doMove(m)
-                Toast.makeText(context, game.getRating().toString(), Toast.LENGTH_SHORT).show()
                 selectedPiece = null
                 this.updateBoard()
             }
         }
-    }
-
-    fun doMove(move: Move)
-    {
-        this.game.doMove(move)
-        this.updateBoard()
     }
 }

@@ -32,11 +32,7 @@ class LoginPage : AppCompatActivity(), View.OnClickListener
         dbRef.child("1").child("userName").setValue("User Name 1")
         dbRef.child("2").child("userName").setValue("User Name 2")
 
-        dbRef.child("1").child(GAMES_PATH).child("-Nx6TRibEnwCZPcHORub").setValue(1)
-        dbRef.child("1").child(GAMES_PATH).child("-Nx7FuNpkOU1tbBwYe7x").setValue(1)
 
-        dbRef.child("2").child(GAMES_PATH).child("-Nx6TRibEnwCZPcHORub").setValue(0)
-        dbRef.child("2").child(GAMES_PATH).child("-Nx7FuNpkOU1tbBwYe7x").setValue(0)
 
         FirebaseUsersHelper.loadUser("1")
         FirebaseUsersHelper.loadGameHistory()
@@ -54,8 +50,8 @@ class LoginPage : AppCompatActivity(), View.OnClickListener
         val intent1 = Intent(this, OnlinePlayersCounter::class.java)
         startService(intent1)
 
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        //val intent = Intent(this, MainActivity::class.java)
+        //startActivity(intent)
 
     }
 

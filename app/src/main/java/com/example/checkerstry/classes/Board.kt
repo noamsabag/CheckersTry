@@ -1,12 +1,9 @@
 package com.example.checkerstry.classes
 
-import java.math.BigInteger
 
-// Shai: Prefer composition over inheritance.
-// Shai: Use Array instead of ArrayList
 class Board(val size:Int)
 {
-    val board = Array(size) {
+    private val board = Array(size) {
         return@Array Array<Piece?>(size) {
             return@Array null
         }
@@ -43,7 +40,7 @@ class Board(val size:Int)
                 output[i, j] = null
                 if (this[i, j] != null)
                 {
-                    output[i, j] = this[i, j]?.copy()
+                    output[i, j] = this[i, j]
                 }
             }
         }
@@ -51,26 +48,3 @@ class Board(val size:Int)
         return output
     }
 }
-
-class LiteBoard(val pieces: ULong = 0xFFF0_0000_0000_0FFFu, val queens: UInt = 0x000_0000_0000_0000u)
-{
-    operator fun get(pos: Pos): Int = (((pieces shr pos.x + 4 * pos.y) and 1u - ((pieces shr (pos.x + 4 * pos.y + 32)) and 1u)) *
-            (((queens shr pos.x + 4 * pos.y) and 1u) + 1u)).toInt()
-}
-
-class LBoard(val blackPieces: UInt = 0x0000_0FFFu, val whitePieces : UInt = 0xFFF0_0000u, val queens: UInt = 0x0000_0000u)
-{
-    operator fun get(pos: Pos): Int = (getBit(whitePieces, pos) - getBit(blackPieces, pos)) * (getBit(queens, pos) + 1)
-
-
-}
-fun getBit(num: UInt, pos: Pos): Int
-{
-    return (num shr (pos.x + 4 * pos.y) and 1u).toInt()
-}
-
-
-fun flipBit(num: UInt, pos: Pos) = num xor (1u shl (pos.x + 4 * pos.y - 1))
-
-fun setBit(num: UInt, pos: Pos, res: Int) = if (getBit(num, pos) == res) num else flipBit(num, pos)
-

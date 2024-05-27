@@ -1,54 +1,22 @@
 package com.example.checkerstry.classes
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import kotlin.math.abs
 import kotlin.properties.Delegates
 import kotlin.reflect.KProperty
 
 
-interface IGame
-{
-    var turn : Player
 
-    var lastMove: Move?
 
-    fun doMove(move: Move)
-
-    fun getMoves(pos: Pos): List<Move>
-
-    fun getAllMoves(): List<Move>
-
-    fun getPoses() : List<Pos>
-
-    fun isFinal(): Player?
-
-    fun getRating(): Int
-
-    fun getDirections(pos: Pos): List<Pos>
-
-    fun unDoMove(move: Move)
-
-    fun copy() : IGame
-
-}
-
-class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -> Unit = { _, _, _ ->}): IGame
+class Game(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -> Unit = { _, _, _ ->})
 {
     //private var board: MutableList<MutableList<Piece?>> = mutableListOf<MutableList<Piece?>>()
-    override var turn : Player by Delegates.observable(Player.White) {  property, oldValue, newValue -> onTurnChanged(property, oldValue, newValue)}
+    var turn : Player by Delegates.observable(Player.White) {  property, oldValue, newValue -> onTurnChanged(property, oldValue, newValue)}
     //private val _turn : MutableLiveData<Player> = MutableLiveData(Player.White)
-    override var lastMove: Move? = null
-    var moves = mutableListOf<Move>()
-    var isMovesInitialized = false
+    var lastMove: Move? = null
+    private var moves = mutableListOf<Move>()
+    private var isMovesInitialized = false
     var board :Board = Board(size)
-    private var rating = 0
-    object Constants
-    {
-        const val SIZE = 8
-    }
 
-    override fun doMove(move: Move)
+    fun doMove(move: Move)
     {
         val saver = board[move.pos]
         board[move.pos] = null
@@ -59,9 +27,6 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
         }
         val move2 = move.copy()
         val endPos: Pos = move.steps.last()
-        move.eaten.values.forEach {
-            rating -= it.getRating()
-        }
 
         if (move.queen)
         {
@@ -75,10 +40,9 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
 
     }
 
-    fun basicGetMoves(pos: Pos, directions: List<Pos>? = null, isChain: Boolean = false): List<Move>
+    private fun basicGetMoves(pos: Pos, directions: List<Pos>? = null, isChain: Boolean = false): List<Move>
     {
-        val piece = board[pos]
-        if (piece == null) return listOf()
+        val piece = board[pos] ?: return listOf()
         val moves: MutableList<Move> = mutableListOf()
         val dirs = directions ?: this.getDirections(pos)
         var reach = 1
@@ -93,7 +57,7 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
             var i = 1
             var opponentsPassed = 0
             var alliesPassed = 0
-            while (!isChain && i <= reach && board.isPosLegal(pos + direction * i) && opponentsPassed == 0 && alliesPassed == 0)
+            while ((!isChain) && i <= reach && board.isPosLegal(pos + direction * i) && opponentsPassed == 0 && alliesPassed == 0)
             {
                 if (board[pos + direction * i] == null)
                 {
@@ -155,11 +119,17 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
             val m = Move(pos)
             moves.add(m)
         }
-        moves.forEach { it.pos = Pos(pos) }
+        moves.forEach {
+            it.pos = Pos(pos)
+            if (!isChain && it.steps.last().y == size - 1 && !board[it.pos]!!.isQueen)
+            {
+                it.queen = true
+            }
+        }
         return moves
     }
 
-    fun initMoves()
+    private fun initMoves()
     {
         if (!isMovesInitialized)
         {
@@ -189,7 +159,7 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
         }
     }
 
-    override fun getMoves(pos: Pos): List<Move>
+    fun getMoves(pos: Pos): List<Move>
     {
         initMoves()
         val res = mutableListOf<Move>()
@@ -197,13 +167,13 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
         return res
     }
 
-    override fun getAllMoves(): List<Move>
+    fun getAllMoves(): List<Move>
     {
         initMoves()
         return moves
     }
 
-    override fun isFinal(): Player?
+    fun isFinal(): Player?
     {
         var white = false
         var black = false
@@ -225,7 +195,7 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
         return Player.Black
     }
 
-    override fun getDirections(pos: Pos): List<Pos>
+    private fun getDirections(pos: Pos): List<Pos>
     {
         var directions = mutableListOf<Pos>()
         val piece = board[pos]
@@ -247,7 +217,7 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
         return directions.toList()
     }
 
-    override fun unDoMove(move: Move)
+    fun unDoMove(move: Move)
     {
         board[move.pos] = board[move.steps.last()]
         board[move.steps.last()] = null
@@ -255,27 +225,18 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
         {
             board[pos] = move.eaten[pos]
         }
-        move.eaten.values.forEach {
-            rating += it.getRating()
-        }
 
         if (move.queen)
         {
             board[move.steps.last()] = Piece(board[move.steps.last()]!!.player, false)
         }
+        isMovesInitialized = false
+        moves = mutableListOf()
         turn = turn.previous()
     }
 
-    override fun copy() : IGame
-    {
-        val out = RegularGame(size)
-        out.board = this.board.copy()
-        out.turn = this.turn
-        out.lastMove = this.lastMove
-        return out
-    }
 
-    override fun getPoses() : List<Pos>
+    private fun getPoses() : List<Pos>
     {
         val poses = mutableListOf<Pos>()
         for (i in 0 until size)
@@ -287,19 +248,4 @@ class RegularGame(val size: Int, onTurnChanged: (KProperty<*>, Player, Player) -
         }
         return poses
     }
-
-    override fun getRating(): Int
-    {
-        var sum = 0
-
-        for (pos in getPoses())
-        {
-            if (board[pos] != null)
-            {
-                sum += board[pos]!!.getRating()
-            }
-        }
-        return sum
-    }
-
 }

@@ -7,10 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.checkerstry.classes.GameData
-import com.example.checkerstry.classes.MoveProvioderType
-import com.example.checkerstry.classes.Player
+import com.example.checkerstry.classes.GameType
 import com.example.checkerstry.databinding.FragmentMainMenuBinding
-import com.example.checkerstry.databinding.FragmentOfflineGameBinding
 
 class MainMenuFragment : Fragment() {
 
@@ -27,19 +25,29 @@ class MainMenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.quickMatch.setOnClickListener{
+        binding.quickMatchRegularGame.setOnClickListener{
+            GameData.isOnline = true
+            GameData.gameType = GameType.RegularGame
             val intent = Intent(context, MatchLoadingActivity::class.java)
             startActivity(intent)
         }
 
-        binding.analysys.setOnClickListener{
-            val intent = Intent(context, GameHistoryActivity::class.java)
+        binding.quickMatchChessInTheDark.setOnClickListener{
+            GameData.isOnline = true
+            GameData.gameType = GameType.CheckersInTheDark
+            val intent = Intent(context, MatchLoadingActivity::class.java)
             startActivity(intent)
         }
 
-        binding.playAginstCpu.setOnClickListener{
-            GameData.getMoveProviders()[Player.Black] = MoveProvioderType.CPU
+        binding.passAndPlayRegularGame.setOnClickListener{
+            GameData.isOnline = false
+            GameData.gameType = GameType.RegularGame
             val intent = Intent(context, GameActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.profile.setOnClickListener{
+            val intent = Intent(context, ProfileActivity::class.java)
             startActivity(intent)
         }
 

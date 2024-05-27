@@ -1,51 +1,24 @@
 package com.example.checkerstry
 
-import android.content.ContentValues.TAG
+import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.text.BoringLayout
-import android.util.Log
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
-import android.widget.GridLayout
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.toColor
 import androidx.lifecycle.ViewModelProvider
 import com.example.checkerstry.classes.DarkGameView
 import com.example.checkerstry.classes.GameActivityViewModel
 import com.example.checkerstry.classes.GameData
-import com.example.checkerstry.classes.GameState
 import com.example.checkerstry.classes.GameType
 import com.example.checkerstry.classes.GameView
-import com.example.checkerstry.classes.IGame
-import com.example.checkerstry.classes.MoveProvioderType
-import com.example.checkerstry.classes.OnlineGameData
-import com.example.checkerstry.classes.OnlineGameHandler
 import com.example.checkerstry.classes.Piece
 import com.example.checkerstry.classes.Player
-import com.example.checkerstry.classes.RegularGame
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.toObject
-import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withContext
-import java.lang.Exception
+import com.example.checkerstry.classes.Game
 
 class GameActivity : ComponentActivity()
 {
@@ -81,16 +54,9 @@ class GameActivity : ComponentActivity()
         whitePlayerData = findViewById(R.id.tvWhitePlayerData)
         val viewModel = ViewModelProvider(this).get(GameActivityViewModel::class.java)
         val game = viewModel.game
-        if (GameData.getMoveProviders().size == 0)
-        {
-            gameView = GameView(this, listOf(Player.Black, Player.White), Pictures.pics, game as RegularGame)
-        }
-        else
-        {
-            gameView = GameView(this, listOf(GameData.getMoveProviders().keys.first().next()), Pictures.pics, game as RegularGame)
-        }
+        gameView = GameViewFactory.create(this, game as Game, GameData.isOnline, GameData.gameType, GameData.myPlayer)
 
-        if (GameData.getMoveProviders().size != 0 && GameData.getMoveProviders().values.first() == MoveProvioderType.ONLINE)
+        if (GameData.isOnline)
         {
             object: Thread() {
                 override fun run() {
@@ -133,7 +99,41 @@ class GameActivity : ComponentActivity()
 
     fun endGame(player: Player)
     {
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("${player.toString()} Player Won")
+            .setPositiveButton("Leave") { _, _ ->
+                super.onBackPressed()
+            }
+            .create()
 
+        dialog.show()
     }
 
+}
+
+object GameViewFactory
+{
+    fun create(context: Context, game: Game, isOnline: Boolean, gameType: GameType, myPlayer: Player): GameView
+    {
+        if (isOnline)
+        {
+            return if (gameType == GameType.CheckersInTheDark)
+            {
+                DarkGameView(context, listOf(myPlayer), GameActivity.pics, game)
+            } else
+            {
+                GameView(context, listOf(myPlayer), GameActivity.pics, game)
+            }
+        }
+        else
+        {
+            return if (gameType == GameType.CheckersInTheDark)
+            {
+                DarkGameView(context, listOf(Player.White, Player.Black), GameActivity.pics, game)
+            } else
+            {
+                GameView(context, listOf(Player.White, Player.Black), GameActivity.pics, game)
+            }
+        }
+    }
 }
