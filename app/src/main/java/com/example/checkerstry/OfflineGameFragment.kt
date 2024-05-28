@@ -8,46 +8,49 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.checkerstry.classes.GameData
 import com.example.checkerstry.classes.GameType
-import com.example.checkerstry.classes.GameTypeDictionary
 import com.example.checkerstry.databinding.FragmentOfflineGameBinding
-import com.example.checkerstry.databinding.FragmentOnlineGameBinding
 
+/**
+ * Fragment for selecting different types of offline games.
+ * This fragment allows users to choose between various game modes for offline play.
+ */
 class OfflineGameFragment : Fragment() {
 
-    private var _binding: FragmentOfflineGameBinding?  = null
-    private  val binding
-        get() = _binding!!
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    // Binding property to handle view references
+    private var _binding: FragmentOfflineGameBinding? = null
+    private val binding get() = _binding!!
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentOfflineGameBinding.inflate(inflater, container, false)
         return binding.root
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Set the game mode to offline
         GameData.isOnline = false
 
-
-
-        binding.cvBigGame.setOnClickListener{
+        // Set up click listeners for each game type card, navigating to the game activity with the selected game type
+        binding.cvBigGame.setOnClickListener {
             GameData.gameType = GameType.BigGame
-            val intent = Intent(context, GameActivity::class.java)
-            startActivity(intent)
+            navigateToGameActivity()
         }
 
-        binding.cvRegularGame.setOnClickListener{
+        binding.cvRegularGame.setOnClickListener {
             GameData.gameType = GameType.RegularGame
-            val intent = Intent(context, GameActivity::class.java)
-            startActivity(intent)
+            navigateToGameActivity()
         }
 
-        binding.cvSmallGame.setOnClickListener{
+        binding.cvSmallGame.setOnClickListener {
             GameData.gameType = GameType.SmallGame
-            val intent = Intent(context, GameActivity::class.java)
-            startActivity(intent)
+            navigateToGameActivity()
         }
     }
 
+    /**
+     * Starts the GameActivity with the current game type specified in GameData.
+     */
+    private fun navigateToGameActivity() {
+        val intent = Intent(context, GameActivity::class.java)
+        startActivity(intent)
+    }
 }

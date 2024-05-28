@@ -3,7 +3,7 @@
         <item>Regular Game</item>
         <item>Checkers In The Dark</item>
         <item>Small Game</item>
-        <Item>Big Game</Item>
+        <item>Big Game</item>
     </string-array>
     <string name="app_name">Checkers.com</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -21,13 +21,13 @@
     <string name="password_text">Password</string>
     <string name="login_text">Log In</string>
     <string name="sign_up_text">Sign Up</string>
-    <string name="create_an_acount_text">Create An Acount</string>
+    <string name="create_an_acount_text">Create An Account</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
+    <string name="welcome">"Welcome \!"</string>
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>

@@ -7,48 +7,56 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import com.example.checkerstry.classes.FirebaseAuthHelper
 import com.example.checkerstry.classes.FirebaseUsersHelper
 import com.example.checkerstry.databinding.SignupPageBinding
-import com.google.firebase.auth.AuthResult
 
-class SignUpPage : ComponentActivity(), View.OnClickListener
-{
-    lateinit var etUserName: EditText
-    lateinit var etPassword: EditText
-    lateinit var btnSignUp: Button
-    lateinit var etEmail: EditText
-    lateinit var binding: SignupPageBinding
-    override fun onCreate(savedInstanceState: Bundle?)
-    {
+/**
+ * Activity for registering a new user. It handles user input for registration details,
+ * communicates with Firebase to create an account, and navigates to the main activity upon successful registration.
+ */
+class SignUpPage : ComponentActivity(), View.OnClickListener {
+    private lateinit var etUserName: EditText  // Input field for user's name
+    private lateinit var etPassword: EditText  // Input field for password
+    private lateinit var etEmail: EditText    // Input field for email
+    private lateinit var btnSignUp: Button    // Button for submitting the registration
+    private lateinit var binding: SignupPageBinding  // View binding for accessing the UI components
+
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = SignupPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Bind UI components
         etUserName = binding.etUsername
         etEmail = binding.etEmail
         etPassword = binding.etPassword
         btnSignUp = binding.btnSignUp
 
+        // Set up the button click listener
         btnSignUp.setOnClickListener(this)
     }
 
-    override fun onClick(v: View?)
-    {
-        FirebaseAuthHelper.createUser(etEmail.text.toString(), etPassword.text.toString()).addOnCompleteListener {
-            if (it.isSuccessful)
-            {
-                FirebaseUsersHelper.initUser(it.result.user!!.uid, etUserName.text.toString())
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
-            } else
-            {
-                Toast.makeText(this, it.exception?.message, Toast.LENGTH_LONG).show()
-                etPassword.text.clear()
-                etUserName.text.clear()
+    /**
+     * Handles click events on the sign-up button. It attempts to create a new user account with the provided credentials.
+     * @param v The view that was clicked.
+     */
+    override fun onClick(v: View?) {
+        if (v == btnSignUp) {
+            val email = etEmail.text.toString()
+            val password = etPassword.text.toString()
+            FirebaseAuthHelper.createUser(email, password) { task ->
+                if (task.isSuccessful) {
+                    // Initialize user data in Firebase and navigate to the main activity
+                    FirebaseUsersHelper.initUser(task.result.user!!.uid, etUserName.text.toString())
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                } else {
+                    // Show error message and clear relevant fields if the registration fails
+                    Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
+                    etPassword.text.clear()
+                    etUserName.text.clear()
+                }
             }
         }
     }

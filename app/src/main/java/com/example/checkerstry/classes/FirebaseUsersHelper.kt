@@ -6,12 +6,21 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlin.math.max
-
+/**
+ * Utility object to handle Firebase operations related to user data and game histories.
+ */
 object FirebaseUsersHelper {
     private const val STARTING_ELO_RANKING = 800
     private const val REGULAR_ELO_CHANGE = 8
 
+    // List to store completed game data for the current user.
     val gamesPlayed: ArrayList<FinishedGameData> = arrayListOf()
+    /**
+     * Initializes user data in Firebase when a new user is created or logged in for the first time.
+     *
+     * @param userId The unique identifier of the user.
+     * @param userName The name of the user.
+     */
     fun initUser(userId: String, userName: String)
     {
         UserData.userId = userId
@@ -26,8 +35,13 @@ object FirebaseUsersHelper {
         dbRef.child("gamesPlayed").setValue(0)
         dbRef.child("gamesWon").setValue(0)
     }
-
-    fun loadUser(userId: String, user: com.example.checkerstry.classes.User? = null)
+    /**
+     * Loads user data from Firebase and updates the local UserData or specified User object.
+     *
+     * @param userId The unique identifier of the user to load.
+     * @param user An optional User object to be populated with the data. If null, updates the global UserData.
+     */
+    fun loadUser(userId: String, user: User? = null)
     {
         UserData.userId = userId
         val dbRef = Firebase.database.getReference("$USERS_PATH/$userId")
@@ -60,7 +74,12 @@ object FirebaseUsersHelper {
             }
         }
     }
-
+    /**
+     * Updates win statistics for the current user and the opponent, adjusting Elo rankings accordingly.
+     *
+     * @param enemyId The unique identifier of the opponent.
+     * @param gameId The unique identifier of the game.
+     */
     fun updateWin(enemyId: String, gameId: String)
     {
         val dbRef = Firebase.database.getReference("$USERS_PATH/${UserData.userId}")
@@ -94,7 +113,9 @@ object FirebaseUsersHelper {
             }
         }
     }
-
+    /**
+     * Loads the game history of the current user from Firebase.
+     */
     fun loadGameHistory()
     {
 
@@ -110,14 +131,13 @@ object FirebaseUsersHelper {
             }
 
         })
-/*
-        Firebase.database.getReference("$USERS_PATH/${UserData.userId}").child("games").get().addOnCompleteListener {
-            it.result.children.forEach {game ->
-                gamesPlayed.add(loadGameData(game.key!!))
-            }
-        }*/
     }
-
+    /**
+     * Loads game data from Firebase based on the provided game ID.
+     *
+     * @param gameId The unique identifier of the game.
+     * @return The game data as a FinishedGameData object.
+     */
     fun loadGameData(gameId: String): FinishedGameData
     {
         val dbRef = Firebase.database.getReference("$GAME_STORAGE_PATH/$gameId")
